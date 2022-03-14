@@ -6,44 +6,51 @@ const sendEmail =  require('../../utils/SendEmail')
 const {JWT_SECRET, JWT_EXP, BASE_URL} = require('../../config')
 
 const RegisterUser = async (req, res) => {
-    const {first_name, last_name, email, password, username} = req.body
-    let error = {}
-
-    if(!first_name || first_name.trim().length === 0){
-        error.first_name = 'First name field must be require'
-    }
-
-
-    if(!last_name || last_name.trim().length === 0){
-        error.last_name = 'Last name field must be require'
-    }
-    
-    if(!email || email.trim().length === 0){
-        error.email = 'Email field must be require'
-    }
-
-    if(!password || password.trim().length === 0){
-        error.password = 'Password field must be require'
-    }
-
-    if (password.trim().length <= 8){
-        error.password = 'Password field must have more than 8 characters'
-    }
-
-    if(!ValidateEmail(email)){
-        error.email = 'Email filed is invalid'
-    }
-
-    if(Object.keys(error).length){
-        return res.status(422).json({error})
-    }
-
     try {
+        const {first_name, last_name, email, password, username} = req.body
+        let error = {}
+
+        if(!first_name || first_name.trim().length === 0){
+            error.first_name = 'First name field must be require'
+        }
+
+        if(!last_name || last_name.trim().length === 0){
+            error.last_name = 'Last name field must be require'
+        }
+        
+        if(!email || email.trim().length === 0){
+            error.email = 'Email field must be require'
+        }
+
+        if(!username || username.trim().length === 0){
+            error.email = 'Username field must be require'
+        }
+
+        if(!password || password.trim().length === 0){
+            error.password = 'Password field must be require'
+        }
+
+        if (password.trim().length <= 8){
+            error.password = 'Password field must have more than 8 characters'
+        }
+
+        if(!ValidateEmail(email)){
+            error.email = 'Email filed is invalid'
+        }
+
+        
         const user = await User.findOne({email})
         if (user) {
-            return res.status(400).json({
-                error: 'Email is already exists'
-            })
+            error.email = 'Email already exists'
+        }
+
+        const user_username = await User.findOne({username})
+        if (user_username) {
+            error.username = 'Username has been used'
+        }
+
+        if(Object.keys(error).length){
+            return res.status(422).json({error})
         }
 
         const hashPassword = await bcrypt.hash(password, 8)

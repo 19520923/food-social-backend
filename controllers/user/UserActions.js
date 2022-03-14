@@ -81,3 +81,64 @@ exports.seenNotification = async (req, res) => {
         return res.status(500).json({error: 'Something went wrong'})
     }
 }
+
+
+exports.updateCoverPic = async (req, res) => {
+    try {
+        const {cover_url} = req.body
+        const user = await User.findById(req.userId)
+        user.cover_url = cover_url
+        await user.save()
+
+        return res.status(200).json({
+            message: 'cover picture updated'
+        })
+    } catch (err){
+        console.log(err)
+        return res.status(500).json({error: 'Something went wrong'})
+    }
+}
+
+exports.updateAvatarPic = async (req, res) => {
+    try {
+        const {avatar_url} = req.body
+        const user = await User.findById(req.userId)
+        user.avatar_url = avatar_url
+        await user.save()
+
+        return res.status(200).json({
+            message: 'avatar picture updated'
+        })
+    } catch (err){
+        console.log(err)
+        return res.status(500).json({error: 'Something went wrong'})
+    }
+}
+
+
+// exports.updateProfile = async (req, res) => {
+//     try {
+//         const {first_name, last_name, username, about} = req.body
+
+//         let error = {}
+
+//         const user_username = await User.findOne({username})
+//         if (user_username) {
+//             error.username = 'Username has been used'
+//         }
+
+//         if(Object.keys(error).length){
+//             return res.status(422).json({error})
+//         }
+//         const user = await User.findById(req.userId)
+//         user.cover_url = cover_url
+//         await user.save()
+
+//         return res.status(200).json({
+//             message: 'cover picture updated'
+//         })
+//     } catch (err){
+//         console.log(err)
+//         return res.status(500).json({error: 'Something went wrong'})
+//     }
+// }

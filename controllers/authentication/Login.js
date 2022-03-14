@@ -16,8 +16,8 @@ module.exports = async (req, res) => {
         error.email = 'Email must be required'
     }
 
-    if(email.trim().length < 8) {
-        error.email = 'Email must be have more than 8 character'
+    if(password.trim().length < 8) {
+        error.password = 'Email must be have more than 8 character'
     }
 
     if( Object.keys(error).length){

@@ -3,7 +3,7 @@ const FilterUserData = require('../../utils/FilterUserData')
 const Notification =  require('../../models/Notification')
 const FilterNotification = require('../../utils/FilterNotification')
 
-exports. fetchUserById = async (req, res) =>{
+exports.fetchUserById = async (req, res) =>{
     try{
         const user = await User.findById(req.params.user_id).populate('follower').populate('following')
         const userData = FilterUserData(user)

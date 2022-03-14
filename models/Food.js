@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const FoodSchema = mongoose.Schema({
+const IngredientSchema = mongoose.Schema({
     name: {
         type: String,
         trim: true,
@@ -8,19 +8,17 @@ const FoodSchema = mongoose.Schema({
     }
 })
 
-const PostSchema = mongoose.Schema({
+const FoodSchema = mongoose.Schema({
     name: {
         type: String,
         trim: true,
         require: true
     },
 
-    ingredients: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Ingredient'
-        }
-    ],
+    ingredients:{
+            type: Array,
+            default: []
+    },
 
     recipe: {
         type: String,
@@ -34,13 +32,17 @@ const PostSchema = mongoose.Schema({
     },
 
     author: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+
+    photo: {
+        type: String,
+        default: ''
     }
 },
     {timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }}
 )
 
 const Food =  mongoose.model('food', FoodSchema)
-const Ingredient = mongoose.model('ingredient', IngredientSchema)
-module.exports = {Food, Ingredient}
+module.exports = {Food}
