@@ -1,4 +1,4 @@
-const { Food } = require("../../models/Food");
+const Food = require("../../models/Food");
 const FoodRate = require("../../models/FoodRate");
 const FilterFoodData = require("../../utils/FilterFoodData");
 const FilterUserData = require("../../utils/FilterUserData");
@@ -9,7 +9,7 @@ exports.fetchFoodById = async (req, res) => {
 
         const filerFood = FilterFoodData(food)
 
-        const rates = await FoodRate.find({food: req.params.food_id}).populate('author')
+        const rates = await FoodRate.find({food: req.params.food_id}).populate('author').sort({created_at: -1})
 
         const filterRates = rates.map((rate) => {
             return {

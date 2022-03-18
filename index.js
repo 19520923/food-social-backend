@@ -15,6 +15,7 @@ const {MONGODB_URI, PORT} = require("./config")
 const AuthRouters = require('./routers/Authentication')
 const UserRouters = require('./routers/User')
 const FoodRouters = require('./routers/Food')
+const PostRouter = require('./routers/Post')
 
 dotenv.config()
 
@@ -46,4 +47,5 @@ require('./socket.js')(io)
 app.use('/api/auth', AuthRouters)
 app.use('/api/user', UserRouters)
 app.use('/api/food', FoodRouters)
+app.use('/api/post', PostRouter)
 

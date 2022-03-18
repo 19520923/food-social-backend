@@ -1,4 +1,4 @@
-const {Food} = require('../../models/Food')
+const Food = require('../../models/Food')
 const User = require('../../models/User')
 const FoodRate = require('../../models/FoodRate')
 const FilterFoodData = require('../../utils/FilterFoodData')
@@ -147,6 +147,8 @@ exports.rateFood = async (req, res) => {
             key: 'new-food-rate',
             data: savedRate
         })
+
+
 
         return res.status(201).json({message: 'food saved successfully', food: food_obj})
 
