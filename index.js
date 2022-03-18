@@ -16,6 +16,7 @@ const AuthRouters = require('./routers/Authentication')
 const UserRouters = require('./routers/User')
 const FoodRouters = require('./routers/Food')
 const PostRouter = require('./routers/Post')
+const ChatRouter = require('./routers/Chat')
 
 dotenv.config()
 
@@ -48,4 +49,4 @@ app.use('/api/auth', AuthRouters)
 app.use('/api/user', UserRouters)
 app.use('/api/food', FoodRouters)
 app.use('/api/post', PostRouter)
-
+app.use('/api/chat',ChatRouter)
