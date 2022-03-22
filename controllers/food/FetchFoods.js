@@ -1,7 +1,10 @@
+const { listen } = require("express/lib/application");
 const Food = require("../../models/Food");
 const FoodRate = require("../../models/FoodRate");
+const Ingredient = require("../../models/Ingredient");
 const FilterFoodData = require("../../utils/FilterFoodData");
 const FilterUserData = require("../../utils/FilterUserData");
+const StringFormat = require("../../utils/StringFormat");
 
 exports.fetchFoodById = async (req, res) => {
     try {
@@ -51,7 +54,55 @@ exports.searchFood = async (req, res) => {
     }
 }
 
+exports.recomandationIngrName = async(req, res) => {
+    try {
+        const list = await Ingredient.aggregate([
+            {$match: {ingr1:{ $regex: '^'+req.params.search}}},
+            {$group : {
+                _id : "$ingr1",
+                count: { $sum: 1 }
+             }},
+             {$sort: {id: 1}},
+             {$limit: 10},
+    ])
+        
+        const data = list.map(ingr => 
+            StringFormat(ingr._id)
+        )
 
-exports.recomandationFood = async (req, res) => {
-    
+        return res.status(200).json({
+            ingredients: data
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error: 'Something went wrong'})
+    }
+}
+
+exports.recomendataionPairing = async (req, res) => {
+    try {
+        const {ingrs} = req.body
+
+        const list = await Ingredient.aggregate([
+            {$match: {ingr1: { $in: ingrs}}},
+            {$sort: {npmi: -1}},
+            
+            {$limit: 20},
+        ])
+
+        const data = list.map(ingr => ({
+            ingr: StringFormat(ingr.ingr2),
+            score: ingr.npmi,
+            type: ingr.ingr2_type
+        }))
+
+        return res.status(200).json({
+            ingrediens: data
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error: 'Something went wrong'})
+    }
 }

@@ -5,6 +5,6 @@ module.exports = {
     JWT_EXP: process.env.JWT_EXPIRE || '10h',
     ADMIN_EMAIL: process.env.ADMIN_EMAIL || "19520923@gm.uit.edu.vn",
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin",
-    BASE_URL: process.env.BASE_URL || 'https://dcb-backend-deploy.herokuapp.com/api',
+    BASE_URL: process.env.BASE_URL || 'https://foodtalk-backend.herokuapp.com',
   }
   
