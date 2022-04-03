@@ -113,3 +113,60 @@ exports.fetchAllReaction = async (req, res) => {
     }
 
 }
+
+exports.fetchTrendingPost = async (req, res) => {
+    let page = parseInt(req.query.page || 0)
+    let limit = 10
+
+    try {
+        const posts = await Post.find({ is_public: true })
+        .sort({ num_heart: -1, created_at: 1})
+        .limit(limit)
+        .skip(page * limit)
+        .populate('author')
+
+        const filterPosts = posts.map((comment) => FilterPostData(comment))
+        const totalCount = await Post.countDocuments({ is_public: true })
+
+        const paginationData = {
+        currentPage: page,
+        totalPage: Math.ceil(totalCount / limit),
+        totalComments: totalCount,
+        }
+        res
+        .status(200)
+        .json({ posts: posts, pagination: paginationData })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({error:"Something went wrong"})
+    }
+}
+
+
+exports.fetchUserPost = async (req, res) => {
+    let page = parseInt(req.query.page || 0)
+    let limit = 10
+
+    try {
+        const posts = await Post.find({ author: req.userId })
+        .sort({created_at: 1})
+        .limit(limit)
+        .skip(page * limit)
+        .populate('author')
+
+        const filterPosts = posts.map((comment) => FilterPostData(comment))
+        const totalCount = await Post.countDocuments({ is_public: true })
+
+        const paginationData = {
+        currentPage: page,
+        totalPage: Math.ceil(totalCount / limit),
+        totalComments: totalCount,
+        }
+        res
+        .status(200)
+        .json({ posts: posts, pagination: paginationData })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({error:"Something went wrong"})
+    }
+}
