@@ -139,6 +139,7 @@ exports.rateFood = async (req, res) => {
         }
 
         food_obj.avg_score = await AvgScore(food_obj)
+        food_obj.num_rate += 1
 
         await food_obj.save()
 
@@ -180,6 +181,7 @@ exports.deleteRate = async (req, res) => {
         }
 
         food_obj.avg_score = await AvgScore(food_obj)
+        food_obj.num_rate -= 1
 
         await food_obj.save()
 

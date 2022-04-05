@@ -31,6 +31,11 @@ const FoodSchema = mongoose.Schema({
     photo: {
         type: String,
         default: ''
+    },
+
+    num_rate: {
+        type: Number,
+        default: 0
     }
 },
     {timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }}

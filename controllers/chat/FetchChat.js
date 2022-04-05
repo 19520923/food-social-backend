@@ -34,7 +34,7 @@ exports.fetchAllChat = async (req, res) => {
         const paginationData = {
         currentPage: page,
         totalPage: Math.ceil(totalCount / limit),
-        totalComments: totalCount,
+        totalChats: totalCount,
         }
         res
         .status(200)
@@ -70,7 +70,7 @@ exports.fetchAllMessage = async (req, res) => {
         const paginationData = {
         currentPage: page,
         totalPage: Math.ceil(totalCount / limit),
-        totalComments: totalCount,
+        totalMessages: totalCount,
         }
         res
         .status(200)

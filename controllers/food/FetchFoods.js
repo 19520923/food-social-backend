@@ -1,10 +1,8 @@
-const { listen } = require("express/lib/application");
 const Food = require("../../models/Food");
 const FoodRate = require("../../models/FoodRate");
 const Ingredient = require("../../models/Ingredient");
 const FilterFoodData = require("../../utils/FilterFoodData");
 const FilterUserData = require("../../utils/FilterUserData");
-const StringFormat = require("../../utils/StringFormat");
 
 exports.fetchFoodById = async (req, res) => {
     try {
@@ -57,21 +55,16 @@ exports.searchFood = async (req, res) => {
 exports.recomandationIngrName = async(req, res) => {
     try {
         const list = await Ingredient.aggregate([
-            {$match: {ingr1:{ $regex: '^'+req.params.search}}},
+            {$match: {ingr1:{ $regex: '^'+req.params.search, $options: 'i'}}},
             {$group : {
                 _id : "$ingr1",
-                count: { $sum: 1 }
              }},
-             {$sort: {id: 1}},
+             {$sort: {id: -1}},
              {$limit: 10},
     ])
         
-        const data = list.map(ingr => 
-            StringFormat(ingr._id)
-        )
-
         return res.status(200).json({
-            ingredients: data
+            ingredients: list
         })
 
     } catch (error) {
@@ -99,7 +92,7 @@ exports.recomendataionPairing = async (req, res) => {
         ])
 
         const data = list.map(ingr => ({
-            ingr: StringFormat(ingr.ingr2),
+            ingr: ingr.ingr2,
             score: ingr.npmi,
             type: ingr.ingr2_type
         }))
@@ -127,16 +120,70 @@ exports.fetchUserFood = async (req, res) => {
         .populate('author')
 
         const filterFoods = foods.map((comment) => FilterFoodData(comment))
-        const totalCount = await Post.countDocuments({ is_public: true })
+        const totalCount = await Food.countDocuments({ author: req.userId })
 
         const paginationData = {
         currentPage: page,
         totalPage: Math.ceil(totalCount / limit),
-        totalComments: totalCount,
+        totalFoods: totalCount,
         }
         res
         .status(200)
         .json({ foods: filterFoods, pagination: paginationData })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({error:"Something went wrong"})
+    }
+}
+
+exports.fetchTrendingFood = async (req, res) => {
+    let page = parseInt(req.query.page || 0)
+    let limit = 10
+
+    try {
+        const foods = await Food.find({  })
+        .sort({num_rate: -1, avg_score: -1, created_at: 1})
+        .limit(limit)
+        .skip(page * limit)
+        .populate('author')
+
+        const filterFoods = foods.map((comment) => FilterFoodData(comment))
+        const totalCount = await Food.countDocuments({ })
+
+        const paginationData = {
+        currentPage: page,
+        totalPage: Math.ceil(totalCount / limit),
+        totalFoods: totalCount,
+        }
+        res
+        .status(200)
+        .json({ foods: filterFoods, pagination: paginationData })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({error:"Something went wrong"})
+    }
+}
+
+exports.fetchAllRate = async (req, res) => {
+    let page = parseInt(req.query.page || 0)
+    let limit = 10
+
+    try {
+        const comments = await FoodRate.find({ food: req.params.food_id })
+        .sort({ created_at: -1 })
+        .limit(limit)
+        .skip(page * limit)
+
+        const totalCount = await FoodRate.countDocuments({ food: req.params.food_id  })
+
+        const paginationData = {
+        currentPage: page,
+        totalPage: Math.ceil(totalCount / limit),
+        totalRates: totalCount,
+        }
+        res
+        .status(200)
+        .json({ rates: comments, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({error:"Something went wrong"})

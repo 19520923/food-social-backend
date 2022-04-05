@@ -31,7 +31,7 @@ exports.fetchPostById = async (req, res) => {
 
 exports.fetchAllPost = async (req, res) => {
     let page = parseInt(req.query.page || 0)
-    let limit = 3
+    let limit = 10
   
     try {
       const posts = await Post.find({is_public: true})
@@ -47,7 +47,7 @@ exports.fetchAllPost = async (req, res) => {
       const paginationData = {
         currentPage:page,
         totalPage:Math.ceil(totalCount/limit),
-        totalPost:totalCount
+        totalPosts:totalCount
       }
       res.status(200).json({ posts: postsData,pagination:paginationData })
     } catch (err) {
@@ -58,7 +58,7 @@ exports.fetchAllPost = async (req, res) => {
 
 exports.fetchAllComment = async (req, res) => {
     let page = parseInt(req.query.page || 0)
-    let limit = 3
+    let limit = 10
 
     try {
         const comments = await PostComment.find({ post: req.params.post_id })
@@ -87,7 +87,7 @@ exports.fetchAllComment = async (req, res) => {
 
 exports.fetchAllReaction = async (req, res) => {
     let page = parseInt(req.query.page || 0)
-    let limit = 3
+    let limit = 10
 
     try {
         const reacts = await PostReaction.find({ post: req.params.post_id })
@@ -102,7 +102,7 @@ exports.fetchAllReaction = async (req, res) => {
         const paginationData = {
         currentPage: page,
         totalPage: Math.ceil(totalCount / limit),
-        totalComments: totalCount,
+        totalReactions: totalCount,
         }
         res
         .status(200)
@@ -131,7 +131,7 @@ exports.fetchTrendingPost = async (req, res) => {
         const paginationData = {
         currentPage: page,
         totalPage: Math.ceil(totalCount / limit),
-        totalComments: totalCount,
+        totalPosts: totalCount,
         }
         res
         .status(200)
@@ -155,12 +155,12 @@ exports.fetchUserPost = async (req, res) => {
         .populate('author')
 
         const filterPosts = posts.map((comment) => FilterPostData(comment))
-        const totalCount = await Post.countDocuments({ is_public: true })
+        const totalCount = await Post.countDocuments({ author: req.userId })
 
         const paginationData = {
         currentPage: page,
         totalPage: Math.ceil(totalCount / limit),
-        totalComments: totalCount,
+        totalPosts: totalCount,
         }
         res
         .status(200)
