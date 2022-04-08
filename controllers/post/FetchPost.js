@@ -2,7 +2,7 @@ const Post = require("../../models/Post");
 const PostComment = require("../../models/PostComment");
 const PostReaction = require("../../models/PostReaction");
 const User = require("../../models/User");
-const { FilterCommentData } = require("../../utils/FilterCommentData");
+const  FilterCommentData= require("../../utils/FilterCommentData");
 const FilterPostData = require("../../utils/FilterPostData");
 
 
@@ -69,7 +69,7 @@ exports.fetchAllComment = async (req, res) => {
         .populate('childrent')
         .populate('author')
 
-        const filterComments = gitcomments.map((comment) => FilterCommentData(comment))
+        const filterComments = comments.map((comment) => FilterCommentData(comment))
         const totalCount = await PostComment.countDocuments({ post: req.params.post_id , parent: null})
 
         const paginationData = {

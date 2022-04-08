@@ -1,6 +1,6 @@
 const FilterUserData = require("./FilterUserData")
 
-module.exports.FilterCommentData = (comment) => {
+module.exports = (comment) => {
     return {
         id: comment.id,
         author: FilterUserData(comment.author),
