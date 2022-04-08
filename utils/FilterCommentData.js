@@ -1,6 +1,6 @@
 const FilterUserData = require("./FilterUserData")
 
-module.exports.FilterCommentData = async(comment) => {
+module.exports.FilterCommentData = (comment) => {
     return {
         id: comment.id,
         author: FilterUserData(comment.author),
