@@ -15,7 +15,7 @@ exports.fetchFoodById = async (req, res) => {
         const filterRates = rates.map((rate) => {
             return {
                 id: rate.id,
-                author: rate.author.id,
+                author: FilterUserData(rate.author),
                 content: rate.content,
                 score: rate.score,
             }

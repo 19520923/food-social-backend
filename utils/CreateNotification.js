@@ -14,7 +14,5 @@ module.exports = async ({receiver, content, destination = '', type = 'SYSTEM', a
 
     const savedNotif = await notification.save()
 
-    return 
-        FilterNotification(savedNotif)
-
+    return FilterNotification(savedNotif)
 }

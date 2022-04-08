@@ -4,7 +4,8 @@ const PostSchema = mongoose.Schema({
     foods: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Food'
+            ref: 'Food',
+            default: []
         }
     ],
 

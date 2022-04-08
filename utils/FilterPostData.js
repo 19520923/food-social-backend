@@ -4,7 +4,7 @@ const FilterUserData = require("./FilterUserData")
 module.exports = (post) => {
     return ({
             id: post.id,
-            foods: post.foods.map(food => FilterFoodData(food)),
+            foods: post.foods,
             content: post.content,
             photos: post.photos,
             num_heart: post.num_heart,

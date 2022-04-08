@@ -6,6 +6,7 @@ const FilterPostData = require("../../utils/FilterPostData")
 const SendDataToFollower = require("../../utils/socket/SendDataToFollower")
 const SendDataToUsers = require("../../utils/socket/SendDataToUsers")
 const CreateNotification = require('../../utils/CreateNotification')
+const { FilterCommentData } = require('../../utils/FilterCommentData')
 
 
 exports.createPost = async (req, res) => {

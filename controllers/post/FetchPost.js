@@ -2,6 +2,7 @@ const Post = require("../../models/Post");
 const PostComment = require("../../models/PostComment");
 const PostReaction = require("../../models/PostReaction");
 const User = require("../../models/User");
+const { FilterCommentData } = require("../../utils/FilterCommentData");
 const FilterPostData = require("../../utils/FilterPostData");
 
 
@@ -61,15 +62,15 @@ exports.fetchAllComment = async (req, res) => {
     let limit = 10
 
     try {
-        const comments = await PostComment.find({ post: req.params.post_id })
+        const comments = await PostComment.find({ post: req.params.post_id, parent: null})
         .sort({ created_at: -1 })
         .limit(limit)
         .skip(page * limit)
-        .populate('author')
         .populate('childrent')
+        .populate('author')
 
-        //const filterComments = comments.map((comment) => FilterCommentData(comment))
-        const totalCount = await PostComment.countDocuments({ post: req.params.post_id })
+        const filterComments = await comments.map((comment) => FilterCommentData(comment))
+        const totalCount = await PostComment.countDocuments({ post: req.params.post_id , parent: null})
 
         const paginationData = {
         currentPage: page,
@@ -78,7 +79,7 @@ exports.fetchAllComment = async (req, res) => {
         }
         res
         .status(200)
-        .json({ comments: comments, pagination: paginationData })
+        .json({ comments: filterComments, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({error:"Something went wrong"})
@@ -164,7 +165,7 @@ exports.fetchUserPost = async (req, res) => {
         }
         res
         .status(200)
-        .json({ posts: posts, pagination: paginationData })
+        .json({ posts: filterPosts, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({error:"Something went wrong"})
