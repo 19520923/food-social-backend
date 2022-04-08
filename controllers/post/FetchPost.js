@@ -69,7 +69,7 @@ exports.fetchAllComment = async (req, res) => {
         .populate('childrent')
         .populate('author')
 
-        const filterComments = await comments.map((comment) => FilterCommentData(comment))
+        const filterComments = gitcomments.map((comment) => FilterCommentData(comment))
         const totalCount = await PostComment.countDocuments({ post: req.params.post_id , parent: null})
 
         const paginationData = {
