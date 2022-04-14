@@ -171,3 +171,34 @@ exports.fetchUserPost = async (req, res) => {
         return res.status(500).json({error:"Something went wrong"})
     }
 }
+
+exports.fetchCloseLocation = async (req, res) => {
+    let page = parseInt(req.query.page || 0)
+    let limit = 10
+
+    try {
+        const {location} = req.body
+        const posts = await Post.find({ is_public: true })
+        .sort({created_at: 1})
+        .limit(limit)
+        .skip(page * limit)
+        .populate('author')
+
+        const postsData = FindCloseLocation(location, posts)
+
+        const filterPosts = postsData.map((comment) => FilterPostData(comment))
+        const totalCount = await Post.countDocuments({ author: req.userId })
+
+        const paginationData = {
+        currentPage: page,
+        totalPage: Math.ceil(totalCount / limit),
+        totalPosts: totalCount,
+        }
+        res
+        .status(200)
+        .json({ posts: filterPosts, pagination: paginationData })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({error:"Something went wrong"})
+    }
+}

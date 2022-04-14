@@ -8,7 +8,7 @@ module.exports = (post) => {
             content: post.content,
             photos: post.photos,
             num_heart: post.num_heart,
-            location: post.location,
+            location: post.location.lat + ',' + post.location.lng,
             is_public: post.is_public,
             author: FilterUserData(post.author),
             create_at: post.create_at

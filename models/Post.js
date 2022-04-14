@@ -30,8 +30,14 @@ const PostSchema = mongoose.Schema({
     },
 
     location: {
-        type: String,
-        default: ''
+        lat :{
+            type:String,
+            default: '',
+        },
+        lng: {
+            type:String,
+            default: '',
+        }
     },
 
     is_public: {

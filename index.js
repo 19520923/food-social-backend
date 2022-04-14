@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const { wakeDyno } = require('heroku-keep-awake');
 
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
@@ -10,7 +11,7 @@ const http = require('http')
 const server = http.createServer(app)
 const io = require('socket.io')(server)
 
-const {MONGODB_URI, PORT} = require("./config")
+const {MONGODB_URI, PORT, BASE_URL} = require("./config")
 
 const AuthRouters = require('./routers/Authentication')
 const UserRouters = require('./routers/User')
@@ -28,7 +29,10 @@ mongoose
     })
     .then(() => {
         console.log('database connected')
-        server.listen(PORT, () => console.log('server started on port 8800'))
+        server.listen(PORT, () => {
+            wakeDyno(BASE_URL)
+            console.log('server started on port 8800')
+        })
     })
     .catch((err) => console.log(err))
     
