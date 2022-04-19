@@ -11,7 +11,7 @@ const http = require('http')
 const server = http.createServer(app)
 const io = require('socket.io')(server)
 
-const {MONGODB_URI, PORT, BASE_URL} = require("./config")
+const { MONGODB_URI, PORT, BASE_URL } = require("./config")
 
 const AuthRouters = require('./routers/Authentication')
 const UserRouters = require('./routers/User')
@@ -22,11 +22,11 @@ const ChatRouter = require('./routers/Chat')
 dotenv.config()
 
 mongoose
-.connect(
-    MONGODB_URI,
-    { 
+    .connect(
+        MONGODB_URI,
+        {
 
-    })
+        })
     .then(() => {
         console.log('database connected')
         server.listen(PORT, () => {
@@ -35,13 +35,13 @@ mongoose
         })
     })
     .catch((err) => console.log(err))
-    
+
 
 app.use(express.json())
 app.use(helmet())
 app.use(morgan("common"))
 app.use(cors())
-app.use((req, res, next)=>{
+app.use((req, res, next) => {
     io.req = req
     req.io = io
     next()
@@ -53,4 +53,4 @@ app.use('/api/auth', AuthRouters)
 app.use('/api/user', UserRouters)
 app.use('/api/food', FoodRouters)
 app.use('/api/post', PostRouter)
-app.use('/api/chat',ChatRouter)
+app.use('/api/chat', ChatRouter)

@@ -20,8 +20,8 @@ const ChatSchema = mongoose.Schema({
         type: Boolean,
         default: false
     }
-}, 
-{timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }}
+},
+    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 )
 
 module.exports = mongoose.model('Chat', ChatSchema)

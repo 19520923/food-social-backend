@@ -7,9 +7,9 @@ const FoodSchema = mongoose.Schema({
         require: true
     },
 
-    ingredients:{
-            type: Array,
-            default: []
+    ingredients: {
+        type: Array,
+        default: []
     },
 
     recipe: {
@@ -38,7 +38,7 @@ const FoodSchema = mongoose.Schema({
         default: 0
     }
 },
-    {timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }}
+    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 )
 
 module.exports = mongoose.model('Food', FoodSchema)

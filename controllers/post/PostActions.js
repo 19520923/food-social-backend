@@ -12,10 +12,10 @@ const { FilterCommentData } = require('../../utils/FilterCommentData')
 exports.createPost = async (req, res) => {
 
     try {
-        const {foods, content, photos, location, is_public} = req.body
+        const { foods, content, photos, location, is_public } = req.body
 
-        if((!content || content.trim().length === 0) && (!photos || photos.length === 0)) {
-            return res.status(400).json({ error: 'Post must have content or a photo'})
+        if ((!content || content.trim().length === 0) && (!photos || photos.length === 0)) {
+            return res.status(400).json({ error: 'Post must have content or a photo' })
         }
 
         const post = new Post({
@@ -26,8 +26,8 @@ exports.createPost = async (req, res) => {
             author: req.userId
         })
 
-        if(foods) {
-            foods.forEach( food => {
+        if (foods) {
+            foods.forEach(food => {
                 post.foods.push(food)
             })
         }
@@ -51,10 +51,10 @@ exports.createPost = async (req, res) => {
             message: 'Create new post successfully',
             post: post_data
         })
-        
+
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
@@ -62,21 +62,21 @@ exports.likeOrDislikePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.post_id).populate('author')
 
-        if(!post) {
-            return res.status(400).json({ error: 'Post not found'})
+        if (!post) {
+            return res.status(400).json({ error: 'Post not found' })
         }
 
-        const postReaction = await PostReaction.findOne({post: post.id, author: req.userId})
+        const postReaction = await PostReaction.findOne({ post: post.id, author: req.userId })
 
-        if(postReaction){
-            await SendDataToUsers({req, key: 'dislike-post', data: postReaction})
+        if (postReaction) {
+            await SendDataToUsers({ req, key: 'dislike-post', data: postReaction })
 
             await postReaction.remove()
-            
-            post.num_heart -=1
-            await post.save()            
 
-            return res.status(200).json({message: 'Remove post reaction succesfully'})
+            post.num_heart -= 1
+            await post.save()
+
+            return res.status(200).json({ message: 'Remove post reaction succesfully' })
         } else {
 
             const postReaction = new PostReaction({
@@ -86,11 +86,11 @@ exports.likeOrDislikePost = async (req, res) => {
 
             const savedPostReaction = await postReaction.save()
 
-            post.num_heart +=1
+            post.num_heart += 1
             await post.save()
 
-            await SendDataToUsers({req, key: 'like-post', data: savedPostReaction})
-            if(post.author.id !== req.userId){
+            await SendDataToUsers({ req, key: 'like-post', data: savedPostReaction })
+            if (post.author.id !== req.userId) {
 
                 let notification = await CreateNotification({
                     author: req.userId,
@@ -99,53 +99,53 @@ exports.likeOrDislikePost = async (req, res) => {
                     destination: '',
                     content: `${post.author.username} has liked your post`
                 })
-        
-                if(post.author.socket_id) {
-        
+
+                if (post.author.socket_id) {
+
                     req.io
                         .to(post.author.socket_id)
-                        .emit('notification', {data: notification})
+                        .emit('notification', { data: notification })
                 }
             }
 
 
-            return res.status(200).json({message: 'Add post reaction succesfully', data: savedPostReaction})
+            return res.status(200).json({ message: 'Add post reaction succesfully', data: savedPostReaction })
 
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
 exports.createComment = async (req, res) => {
     try {
-        const {post, content, parent} = req.body
+        const { post, content, parent } = req.body
 
         const post_obj = await Post.findById(post).populate('author')
 
-        if(!post_obj) {
+        if (!post_obj) {
             error.post = 'Post not found'
         }
 
         error = {}
 
-        if(!content|| content.trim().length === 0) {
+        if (!content || content.trim().length === 0) {
             error.content = 'Content field must be require'
         }
 
-        if(parent) {
+        if (parent) {
 
             const parent_obj = await PostComment.findById(parent)
-    
-            if(!parent_obj) {
+
+            if (!parent_obj) {
                 error.parent = 'parent comment not found'
             }
         }
 
 
         if (Object.keys(error).length) {
-            return res.status(422).json({error})
+            return res.status(422).json({ error })
         }
 
         const comment = new PostComment({
@@ -157,10 +157,10 @@ exports.createComment = async (req, res) => {
 
         const saveComment = await comment.save()
 
-        await SendDataToUsers({req, key: 'new-comment-post', data: saveComment})
+        await SendDataToUsers({ req, key: 'new-comment-post', data: saveComment })
 
 
-        if(post_obj.author.id !== req.userId) {
+        if (post_obj.author.id !== req.userId) {
 
             let notification = await CreateNotification({
                 author: req.userId,
@@ -169,19 +169,19 @@ exports.createComment = async (req, res) => {
                 destination: '',
                 content: `${post_obj.author.username} has comment your post`
             })
-    
-            if(post_obj.author.socket_id) {
-    
+
+            if (post_obj.author.socket_id) {
+
                 req.io
                     .to(post_obj.author.socket_id)
-                    .emit('notification', {data: notification})
+                    .emit('notification', { data: notification })
             }
         }
 
-        return res.status(200).json({message: 'Add comment succesfully', data: saveComment})
+        return res.status(200).json({ message: 'Add comment succesfully', data: saveComment })
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }

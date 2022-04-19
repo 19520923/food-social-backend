@@ -7,7 +7,7 @@ exports.followUser = async (req, res) => {
         const user_receiver = await User.findById(req.params.user_id)
         const user_send = await User.findById(req.userId)
 
-        if(!user_receiver){
+        if (!user_receiver) {
             return res.status(404).json({
                 error: 'User not found'
             })
@@ -15,8 +15,8 @@ exports.followUser = async (req, res) => {
 
         if (req.userId == req.params.user_id) {
             return res
-              .status(400)
-              .json({ error: 'You cannot send friend request to yourself' })
+                .status(400)
+                .json({ error: 'You cannot send friend request to yourself' })
         }
 
         if (user_send.following.includes(req.params.user_id)) {
@@ -37,14 +37,14 @@ exports.followUser = async (req, res) => {
             content: `${user_send.username} has been following you`
         })
 
-        if(user_receiver.socket_id) {
+        if (user_receiver.socket_id) {
             req.io
                 .to(user_receiver.socket_id)
-                .emit('follow-request-status', {sender: FilterUserData(user_send)})
+                .emit('follow-request-status', { sender: FilterUserData(user_send) })
 
             req.io
                 .to(user_receiver.socket_id)
-                .emit('notification', {data: notification})
+                .emit('notification', { data: notification })
         }
 
         return res.status(200).json({
@@ -52,9 +52,9 @@ exports.followUser = async (req, res) => {
             notification: notification
         })
 
-    } catch (err){
+    } catch (err) {
         console.log(err)
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
@@ -63,29 +63,29 @@ exports.seenNotification = async (req, res) => {
     try {
         const notification = await Notification.findById(req.params.notification_id)
 
-        if(!notification){
-            return res.status(404).json({error : 'Not found'})
+        if (!notification) {
+            return res.status(404).json({ error: 'Not found' })
         }
 
-        if (notification.is_seen){
-            return res.status(400).json({error : 'Already seen'})
+        if (notification.is_seen) {
+            return res.status(400).json({ error: 'Already seen' })
         }
 
         notification.is_seen = true
         await notification.save()
 
-        return res.status(200).json({message: "already seen"})
-        
+        return res.status(200).json({ message: "already seen" })
+
     } catch (err) {
         console.log(err)
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
 
 exports.updateCoverPic = async (req, res) => {
     try {
-        const {cover_url} = req.body
+        const { cover_url } = req.body
         const user = await User.findById(req.userId)
         user.cover_url = cover_url
         await user.save()
@@ -93,15 +93,15 @@ exports.updateCoverPic = async (req, res) => {
         return res.status(200).json({
             message: 'cover picture updated'
         })
-    } catch (err){
+    } catch (err) {
         console.log(err)
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
 exports.updateAvatarPic = async (req, res) => {
     try {
-        const {avatar_url} = req.body
+        const { avatar_url } = req.body
         const user = await User.findById(req.userId)
         user.avatar_url = avatar_url
         await user.save()
@@ -109,9 +109,9 @@ exports.updateAvatarPic = async (req, res) => {
         return res.status(200).json({
             message: 'avatar picture updated'
         })
-    } catch (err){
+    } catch (err) {
         console.log(err)
-        return res.status(500).json({error: 'Something went wrong'})
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
