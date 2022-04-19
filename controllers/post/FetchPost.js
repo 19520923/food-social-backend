@@ -113,7 +113,7 @@ exports.fetchAllReaction = async (req, res) => {
         }
         res
         .status(200)
-        .json({ reactions: reacts, pagination: paginationData })
+        .json({ reacts: reacts, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({error:"Something went wrong"})
