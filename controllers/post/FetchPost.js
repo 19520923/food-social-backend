@@ -14,15 +14,12 @@ exports.fetchPostById = async (req, res) => {
             return res.status(400).json({error: 'Not found'})
         }
 
-        const reacts = await PostReaction.find({post}).limit(1).populate('author')
-
         //const comments = await PostComment.find({post}).populate('author').populate('childrent')
 
         const post_data = FilterPostData(post)
 
         return res.status(200).json({
             post: post_data,
-            reactions: reacts,
         })
     } catch (error) {
         console.log(error);
@@ -42,7 +39,16 @@ exports.fetchAllPost = async (req, res) => {
         .populate('author')
         .populate('foods')
 
-      let postsData = posts.map((post) => post.id)
+      let postsData = posts.map((post) => {
+          const comment = PostComment.findOne({post: post}).populate('author')
+
+          const commentData = FilterCommentData(comment)
+          const postData = FilterPostData(post)
+          return {
+              postData,
+              comment: commentData,
+          }
+      })
   
       const totalCount = await Post.estimatedDocumentCount().exec()
       const paginationData = {
