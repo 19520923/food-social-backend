@@ -5,7 +5,7 @@ module.exports = {
     JWT_EXP: process.env.JWT_EXPIRE || '10h',
     ADMIN_EMAIL: process.env.ADMIN_EMAIL || "19520923@gm.uit.edu.vn",
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin",
-    // BASE_URL: process.env.BASE_URL || 'https://foodtalk-backend.herokuapp.com',
-    BASE_URL: process.env.BASE_URL || 'food-social-backend-fe5srp965-19520923.vercel.app',
+    BASE_URL: process.env.BASE_URL || 'https://foodtalk-backend.herokuapp.com',
+    // BASE_URL: process.env.BASE_URL || 'https://food-social-backend.vercel.app',
   }
   
