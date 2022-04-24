@@ -30,12 +30,16 @@ const PostSchema = mongoose.Schema({
     },
 
     location: {
-        lat :{
-            type:String,
+        name: {
+            type: String,
+            default: ''
+        },
+        lat: {
+            type: String,
             default: '',
         },
         lng: {
-            type:String,
+            type: String,
             default: '',
         }
     },
