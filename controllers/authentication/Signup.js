@@ -71,7 +71,7 @@ const RegisterUser = async (req, res) => {
             expiresIn: JWT_EXP,
         })
 
-        const emailMessage = `${BASE_URL}/auth/verify/${token}`
+        const emailMessage = `${BASE_URL}/api/auth/verify/${token}`
         await sendEmail(saveUser.email, 'Verify Email', emailMessage)
 
         return res.status(201).json({
