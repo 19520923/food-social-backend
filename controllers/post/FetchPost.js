@@ -40,7 +40,7 @@ exports.fetchAllPost = async (req, res) => {
             .populate('foods')
 
         let postsData = posts.map((post) => {
-            const comment = PostComment.findOne({ post: post }).populate('author')
+            const comment = PostComment.findOne({ post: post.id }).populate('author')
 
             const commentData = FilterCommentData(comment)
             const postData = FilterPostData(post)
