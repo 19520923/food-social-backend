@@ -56,7 +56,7 @@ exports.fetchAllPost = async (req, res) => {
             totalPage: Math.ceil(totalCount / limit),
             totalPosts: totalCount
         }
-        res.status(200).json({ posts: postsData, pagination: paginationData })
+        res.status(200).json({ posts: posts, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
