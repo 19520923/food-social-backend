@@ -39,16 +39,16 @@ exports.fetchAllPost = async (req, res) => {
             .populate('author')
             .populate('foods')
 
-        let postsData = posts.map((post) => {
-            const comment = PostComment.findOne({ post: post.id }).populate('author')
+        // let postsData = posts.map((post) => {
+        //     const comment = PostComment.findOne({ post: post.id }).populate('author')
 
-            const commentData = FilterCommentData(comment)
-            const postData = FilterPostData(post)
-            return {
-                postData,
-                comment: commentData,
-            }
-        })
+        //     const commentData = FilterCommentData(comment)
+        //     const postData = FilterPostData(post)
+        //     return {
+        //         postData,
+        //         comment: commentData,
+        //     }
+        // })
 
         const totalCount = await Post.estimatedDocumentCount().exec()
         const paginationData = {
