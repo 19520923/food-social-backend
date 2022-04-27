@@ -38,7 +38,6 @@ exports.fetchAllPost = async (req, res) => {
             .skip(page * limit)
             .populate('author')
             .populate('foods')
-
         // let postsData = posts.map((post) => {
         //     const comment = PostComment.findOne({ post: post.id }).populate('author')
 
@@ -56,7 +55,7 @@ exports.fetchAllPost = async (req, res) => {
             totalPage: Math.ceil(totalCount / limit),
             totalPosts: totalCount
         }
-        res.status(200).json({ posts: posts, pagination: paginationData })
+        res.status(200).json({ posts: posts.map((post) => FilterPostData(post)), pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
