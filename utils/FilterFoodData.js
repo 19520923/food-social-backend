@@ -8,7 +8,11 @@ module.exports = (food) => {
         recipe: food.recipe,
         avg_score: food.avg_score,
         about: food.about,
-        author: FilterUserData(food.author),
+        author:{
+            id: food.author_id,
+            username:food.author.username,
+            avatar_url:food.author.avatar_url,
+        },
         photo: food.photo,
         created_at: food.created_at
     }

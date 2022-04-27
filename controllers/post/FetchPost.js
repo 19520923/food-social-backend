@@ -38,16 +38,10 @@ exports.fetchAllPost = async (req, res) => {
             .skip(page * limit)
             .populate('author')
             .populate('foods')
-        // let postsData = posts.map((post) => {
-        //     const comment = PostComment.findOne({ post: post.id }).populate('author')
 
-        //     const commentData = FilterCommentData(comment)
-        //     const postData = FilterPostData(post)
-        //     return {
-        //         postData,
-        //         comment: commentData,
-        //     }
-        // })
+
+            console.log(posts);
+        //const postData = posts.map((post) => FilterPostData(post))
 
         const totalCount = await Post.estimatedDocumentCount().exec()
         const paginationData = {
@@ -55,7 +49,7 @@ exports.fetchAllPost = async (req, res) => {
             totalPage: Math.ceil(totalCount / limit),
             totalPosts: totalCount
         }
-        res.status(200).json({ posts: posts.map((post) => FilterPostData(post)), pagination: paginationData })
+        res.status(200).json({ posts: posts, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })

@@ -60,7 +60,7 @@ exports.createPost = async (req, res) => {
 
 exports.likeOrDislikePost = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.post_id).populate('author')
+        const post = await Post.findById(req.params.post_id).populate('author').populate('foods')
 
         if (!post) {
             return res.status(400).json({ error: 'Post not found' })
@@ -71,15 +71,15 @@ exports.likeOrDislikePost = async (req, res) => {
             post.reactions.splice(index, 1)
             post.num_heart -=1
             const savedPost = await post.save()
-            const postData = FilterPostData(savedPost)
-            await SendDataToUsers({ req, key: 'dislike-post', data: postData })
-            return res.status(200).json({ message: 'Remove post reaction succesfully', post: postData })
+            //const postData = FilterPostData(savedPost)
+            await SendDataToUsers({ req, key: 'dislike-post', data: savedPost })
+            return res.status(200).json({ message: 'Remove post reaction succesfully', post: savedPost })
         } else {
             post.reactions.push(req.userId)
             post.num_heart += 1
             const savedPost = await post.save()
-            const postData = FilterPostData(savedPost)
-            await SendDataToUsers({ req, key: 'like-post', data: postData })
+            //const postData = FilterPostData(savedPost)
+            await SendDataToUsers({ req, key: 'like-post', data: savedPost })
             if (post.author.id !== req.userId) {
 
                 let notification = await CreateNotification({
@@ -97,7 +97,7 @@ exports.likeOrDislikePost = async (req, res) => {
                         .emit('notification', { data: notification })
                 }
             }
-            return res.status(200).json({ message: 'Add post reaction succesfully', post: postData })
+            return res.status(200).json({ message: 'Add post reaction succesfully', post: savedPost })
         }
     } catch (error) {
         console.log(error);

@@ -5,7 +5,11 @@ module.exports = (notif) => {
 
     return {
         id: notif.id,
-        author: notif.author,
+        author: {
+            id: notif.author_id,
+            username: notif.author.username,
+            avatar_url: notif.author.avatar_url,
+        },
         notify_type: notif.notify_type,
         destination: notif.destination,
         content: notif.content,
