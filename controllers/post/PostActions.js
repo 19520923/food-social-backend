@@ -97,7 +97,7 @@ exports.likeOrDislikePost = async (req, res) => {
                         .emit('notification', { data: notification })
                 }
             }
-            return res.status(200).json({ message: 'Add post reaction succesfully', data: postData })
+            return res.status(200).json({ message: 'Add post reaction succesfully', post: postData })
         }
     } catch (error) {
         console.log(error);
