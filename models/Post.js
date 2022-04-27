@@ -19,6 +19,18 @@ const PostSchema = mongoose.Schema({
         default: []
     },
 
+    reactions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+
+    num_comment: {
+        type: Number,
+        default: 0
+    },
+
     num_heart: {
         type: Number,
         default: 0
@@ -49,7 +61,7 @@ const PostSchema = mongoose.Schema({
         default: true
     }
 },
-    {timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }}
+    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 )
 
 module.exports = mongoose.model('Post', PostSchema)

@@ -66,30 +66,20 @@ exports.likeOrDislikePost = async (req, res) => {
             return res.status(400).json({ error: 'Post not found' })
         }
 
-        const postReaction = await PostReaction.findOne({ post: post.id, author: req.userId })
-
-        if (postReaction) {
-            await SendDataToUsers({ req, key: 'dislike-post', data: postReaction })
-
-            await postReaction.remove()
-
-            post.num_heart -= 1
-            await post.save()
-
+        const index = post.reactions.indexOf(req.userId)
+        if (index !== -1) {
+            post.reactions.splice(index, 1)
+            post.num_heart -=1
+            const savedPost = await post.save()
+            const postData = FilterPostData(savedPost)
+            await SendDataToUsers({ req, key: 'dislike-post', data: postData })
             return res.status(200).json({ message: 'Remove post reaction succesfully' })
         } else {
-
-            const postReaction = new PostReaction({
-                author: req.userId,
-                post: post
-            })
-
-            const savedPostReaction = await postReaction.save()
-
+            post.reactions.push(req.userId)
             post.num_heart += 1
-            await post.save()
-
-            await SendDataToUsers({ req, key: 'like-post', data: savedPostReaction })
+            const savedPost = await post.save()
+            const postData = FilterPostData(savedPost)
+            await SendDataToUsers({ req, key: 'like-post', data: postData })
             if (post.author.id !== req.userId) {
 
                 let notification = await CreateNotification({
@@ -107,10 +97,7 @@ exports.likeOrDislikePost = async (req, res) => {
                         .emit('notification', { data: notification })
                 }
             }
-
-
-            return res.status(200).json({ message: 'Add post reaction succesfully', data: savedPostReaction })
-
+            return res.status(200).json({ message: 'Add post reaction succesfully', data: postData })
         }
     } catch (error) {
         console.log(error);
@@ -157,7 +144,10 @@ exports.createComment = async (req, res) => {
 
         const saveComment = await comment.save()
 
-        await SendDataToUsers({ req, key: 'new-comment-post', data: saveComment })
+        post_obj.num_comment += 1
+        await post_obj.save()
+
+        await SendDataToUsers({ req, key: 'new-comment-post', data: FilterCommentData(saveComment) })
 
 
         if (post_obj.author.id !== req.userId) {
@@ -178,7 +168,7 @@ exports.createComment = async (req, res) => {
             }
         }
 
-        return res.status(200).json({ message: 'Add comment succesfully', data: saveComment })
+        return res.status(200).json({ message: 'Add comment succesfully', data: FilterCommentData(saveComment) })
 
     } catch (error) {
         console.log(error);
