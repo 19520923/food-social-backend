@@ -73,7 +73,7 @@ exports.likeOrDislikePost = async (req, res) => {
             const savedPost = await post.save()
             const postData = FilterPostData(savedPost)
             await SendDataToUsers({ req, key: 'dislike-post', data: postData })
-            return res.status(200).json({ message: 'Remove post reaction succesfully' })
+            return res.status(200).json({ message: 'Remove post reaction succesfully', post: postData })
         } else {
             post.reactions.push(req.userId)
             post.num_heart += 1
