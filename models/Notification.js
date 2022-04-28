@@ -4,7 +4,7 @@ const NotificationSchema = mongoose.Schema({
     notify_type:{
         type: String,
         default: 'SYSTEM',
-        enum: ['SYSTEM', 'FOOD', 'POST', 'FOLLOW']
+        enum: ['SYSTEM', 'FOOD', 'POST', 'FOLLOW', 'LIKE']
     },
 
     author: {
