@@ -94,16 +94,11 @@ exports.me = async (req, res) => {
         userData.follower = follower
         userData.following = following
 
-        const notifications = await Notification.find({ receiver: req.userId }).sort({ create_at: -1 })
-        let notifData = notifications.map(notif => {
-            return {
-                ...FilterNotification(notif)
-            }
-        })
+        const notifications = await Notification.find({ receiver: req.userId }).sort({ create_at: -1 }).populate('author')
 
         return res.status(200).json({
             user: userData,
-            notifications: notifData
+            notifications: notifications
         })
     } catch (err) {
         console.log(err)
