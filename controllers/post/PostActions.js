@@ -34,7 +34,7 @@ exports.createPost = async (req, res) => {
 
         const savePost = await post.save()
 
-        const post_data = FilterPostData(await Post.findById(savePost.id).populate('author').populate('foods'))
+        const post_data = savePost.populate('author').populate('foods').execPopulate()
 
         let notifData = {
             req,
@@ -84,7 +84,7 @@ exports.likeOrDislikePost = async (req, res) => {
 
                 let notification = await CreateNotification({
                     author: req.userId,
-                    receiver: post.author.id,
+                    receiver: post.author._id,
                     type: 'LIKE',
                     destination: '',
                     content: `${post.author.username} has liked your post`
