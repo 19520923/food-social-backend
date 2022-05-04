@@ -78,6 +78,7 @@ exports.fetchAllFood = async (req, res) => {
 
 exports.recomandationIngrName = async (req, res) => {
     try {
+        if(req.query.name == '') return
         const list = await Ingredient.aggregate([
             { $match: { ingr1: { $regex: '^' + req.params.search, $options: 'i' } } },
             {
@@ -102,7 +103,7 @@ exports.recomandationIngrName = async (req, res) => {
 exports.recomendataionPairing = async (req, res) => {
     try {
         const { ingrs } = req.body
-
+        if(ingrs.length === 0) return
         const list = await Ingredient.aggregate([
             {
                 $match: {
