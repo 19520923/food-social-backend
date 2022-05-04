@@ -102,7 +102,7 @@ exports.recomandationIngrName = async (req, res) => {
 
 exports.recomendataionPairing = async (req, res) => {
     try {
-        const { ingrs } = req.body
+        const ingrs = req.query.ingrs
         const list = await Ingredient.aggregate([
             {
                 $match: {

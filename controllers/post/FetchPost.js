@@ -14,12 +14,13 @@ exports.fetchPostById = async (req, res) => {
             return res.status(400).json({ error: 'Not found' })
         }
 
-        //const comments = await PostComment.find({post}).populate('author').populate('childrent')
+        const comments = await PostComment.find({post}).populate('author').populate('childrent')
 
         const post_data = FilterPostData(post)
 
         return res.status(200).json({
             post: post_data,
+            comments: comments,
         })
     } catch (error) {
         console.log(error);
@@ -38,9 +39,6 @@ exports.fetchAllPost = async (req, res) => {
             .skip(page * limit)
             .populate('author')
             .populate('foods')
-
-
-            console.log(posts);
         //const postData = posts.map((post) => FilterPostData(post))
 
         const totalCount = await Post.estimatedDocumentCount().exec()
@@ -68,7 +66,7 @@ exports.fetchAllComment = async (req, res) => {
             .populate('childrent')
             .populate('author')
 
-        const filterComments = comments.map((comment) => FilterCommentData(comment))
+        //const filterComments = comments.map((comment) => FilterCommentData(comment))
         const totalCount = await PostComment.countDocuments({ post: req.params.post_id, parent: null })
 
         const paginationData = {
@@ -78,7 +76,7 @@ exports.fetchAllComment = async (req, res) => {
         }
         res
             .status(200)
-            .json({ comments: filterComments, pagination: paginationData })
+            .json({ comments: comments, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
@@ -124,8 +122,9 @@ exports.fetchTrendingPost = async (req, res) => {
             .limit(limit)
             .skip(page * limit)
             .populate('author')
+            .populate('foods')
 
-        const filterPosts = posts.map((comment) => FilterPostData(comment))
+        //const filterPosts = posts.map((comment) => FilterPostData(comment))
         const totalCount = await Post.countDocuments({ is_public: true })
 
         const paginationData = {
@@ -135,7 +134,7 @@ exports.fetchTrendingPost = async (req, res) => {
         }
         res
             .status(200)
-            .json({ posts: filterPosts, pagination: paginationData })
+            .json({ posts: posts, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
@@ -153,8 +152,9 @@ exports.fetchUserPost = async (req, res) => {
             .limit(limit)
             .skip(page * limit)
             .populate('author')
+            .populate('foods')
 
-        const filterPosts = posts.map((comment) => FilterPostData(comment))
+        //const filterPosts = posts.map((comment) => FilterPostData(comment))
         const totalCount = await Post.countDocuments({ author: req.userId })
 
         const paginationData = {
@@ -164,7 +164,7 @@ exports.fetchUserPost = async (req, res) => {
         }
         res
             .status(200)
-            .json({ posts: filterPosts, pagination: paginationData })
+            .json({ posts: posts, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
@@ -176,16 +176,17 @@ exports.fetchCloseLocation = async (req, res) => {
     let limit = 10
 
     try {
-        const { location } = req.body
+        const location = req.query.location
         const posts = await Post.find({ is_public: true })
             .sort({ created_at: 1 })
             .limit(limit)
             .skip(page * limit)
             .populate('author')
+            .populate('foods')
 
         const postsData = FindCloseLocation(location, posts)
 
-        const filterPosts = postsData.map((comment) => FilterPostData(comment))
+        //const filterPosts = postsData.map((comment) => FilterPostData(comment))
         const totalCount = await Post.countDocuments({ author: req.userId })
 
         const paginationData = {
@@ -195,7 +196,7 @@ exports.fetchCloseLocation = async (req, res) => {
         }
         res
             .status(200)
-            .json({ posts: filterPosts, pagination: paginationData })
+            .json({ posts: postsData, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
