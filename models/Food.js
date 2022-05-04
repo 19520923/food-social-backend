@@ -41,4 +41,6 @@ const FoodSchema = mongoose.Schema({
     { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 )
 
+FoodSchema.index({name: 'text'})
+
 module.exports = mongoose.model('Food', FoodSchema)

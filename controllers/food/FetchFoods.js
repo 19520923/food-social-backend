@@ -8,7 +8,7 @@ exports.fetchFoodById = async (req, res) => {
     try {
         const food = await Food.findById(req.params.food_id).populate('author')
 
-        const filerFood = FilterFoodData(food)
+        //const filerFood = FilterFoodData(food)
 
         const rates = await FoodRate.find({ food: req.params.food_id }).populate('author').sort({ created_at: -1 })
 
@@ -22,7 +22,7 @@ exports.fetchFoodById = async (req, res) => {
         })
 
         return res.status(200).json({
-            food: filerFood,
+            food: food,
             rates: filterRates
         })
     } catch (error) {
@@ -45,6 +45,34 @@ exports.searchFood = async (req, res) => {
         return res.status(500).json({
             error: 'Something went wrong'
         })
+    }
+}
+
+exports.fetchAllFood = async (req, res) => {
+    let page = parseInt(req.query.page || 0)
+    let limit = 10
+
+    try {
+        const foods = await Food.find({})
+            .sort({ created_at: 1 })
+            .limit(limit)
+            .skip(page * limit)
+            .populate('author')
+
+        //const filterFoods = foods.map((comment) => FilterFoodData(comment))
+        const totalCount = await Food.countDocuments({})
+
+        const paginationData = {
+            currentPage: page,
+            totalPage: Math.ceil(totalCount / limit),
+            totalFoods: totalCount,
+        }
+        res
+            .status(200)
+            .json({ foods: foods, pagination: paginationData })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ error: "Something went wrong" })
     }
 }
 
@@ -119,7 +147,7 @@ exports.fetchUserFood = async (req, res) => {
             .skip(page * limit)
             .populate('author')
 
-        const filterFoods = foods.map((comment) => FilterFoodData(comment))
+        //const filterFoods = foods.map((comment) => FilterFoodData(comment))
         const totalCount = await Food.countDocuments({ author: req.userId })
 
         const paginationData = {
@@ -129,7 +157,7 @@ exports.fetchUserFood = async (req, res) => {
         }
         res
             .status(200)
-            .json({ foods: filterFoods, pagination: paginationData })
+            .json({ foods: foods, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
@@ -147,7 +175,7 @@ exports.fetchTrendingFood = async (req, res) => {
             .skip(page * limit)
             .populate('author')
 
-        const filterFoods = foods.map((comment) => FilterFoodData(comment))
+        //const filterFoods = foods.map((comment) => FilterFoodData(comment))
         const totalCount = await Food.countDocuments({})
 
         const paginationData = {
@@ -157,7 +185,7 @@ exports.fetchTrendingFood = async (req, res) => {
         }
         res
             .status(200)
-            .json({ foods: filterFoods, pagination: paginationData })
+            .json({ foods: foods, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
@@ -173,6 +201,7 @@ exports.fetchAllRate = async (req, res) => {
             .sort({ created_at: -1 })
             .limit(limit)
             .skip(page * limit)
+            .populate('author')
 
         const totalCount = await FoodRate.countDocuments({ food: req.params.food_id })
 
