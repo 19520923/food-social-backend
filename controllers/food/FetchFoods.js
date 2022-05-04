@@ -78,7 +78,7 @@ exports.fetchAllFood = async (req, res) => {
 
 exports.recomandationIngrName = async (req, res) => {
     try {
-        if(req.params.search == '') return
+        if (req.params.search == '') return
         const list = await Ingredient.aggregate([
             { $match: { ingr1: { $regex: '^' + req.params.search, $options: 'i' } } },
             {
@@ -106,8 +106,8 @@ exports.recomendataionPairing = async (req, res) => {
         const list = await Ingredient.aggregate([
             {
                 $match: {
-                    ingr1: { $in: ingrs },
-                    ingr2: { $nin: ingrs }
+                    $expr: { $in: ["$ingr1", ingrs] },
+                    $expr: { $not: { $in: ["$ingr2", ingrs] } }
                 }
             },
             { $sort: { npmi: -1 } },
@@ -126,7 +126,7 @@ exports.recomendataionPairing = async (req, res) => {
         }))
 
         return res.status(200).json({
-            ingrediens: data
+            ingredients: data
         })
 
     } catch (error) {
