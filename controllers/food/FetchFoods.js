@@ -37,12 +37,8 @@ exports.searchFood = async (req, res) => {
             { name: { $regex: req.params.search, $options: 'i' } }
         ).populate('author')
 
-        const filterFood = foods.map(food =>
-            FilterFoodData(food)
-        )
-
         return res.status(200).json({
-            foods: filterFood
+            foods: foods
         })
     } catch (err) {
         console.log(err)
