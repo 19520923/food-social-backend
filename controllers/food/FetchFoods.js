@@ -103,7 +103,6 @@ exports.recomandationIngrName = async (req, res) => {
 exports.recomendataionPairing = async (req, res) => {
     try {
         const { ingrs } = req.body
-        if(ingrs.length === 0) return
         const list = await Ingredient.aggregate([
             {
                 $match: {
