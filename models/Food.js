@@ -13,9 +13,8 @@ const FoodSchema = mongoose.Schema({
     },
 
     recipe: {
-        type: String,
-        trim: true,
-        require: true
+        type: Array,
+        default: [],
     },
 
     avg_score: {

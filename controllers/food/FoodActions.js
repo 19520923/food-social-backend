@@ -8,9 +8,7 @@ const SendDataToUsers = require('../../utils/socket/SendDataToUsers')
 
 exports.createFood = async (req, res) => {
     try {
-        const { name, ingredients, recipe, about = '', photo = '' } = req.body
-
-        author = await User.findById(req.userId)
+        const { name, ingredients, recipe, photo = '' } = req.body
 
         error = {}
 
@@ -22,8 +20,8 @@ exports.createFood = async (req, res) => {
             error.ingredients = 'Name field must be require'
         }
 
-        if (!recipe || recipe.trim().length === 0) {
-            error.name = 'Name field must be require'
+        if (!recipe || recipe.length === 0) {
+            error.recipe = 'Recipe field must be require'
         }
 
         const f_existed = await Food.findOne({ name })
@@ -38,10 +36,9 @@ exports.createFood = async (req, res) => {
 
         const food = new Food({
             name,
-            recipe,
-            about,
+            recipe: recipe,
             photo,
-            author: author.id,
+            author: req.userId,
             ingredients: ingredients
         })
 
@@ -49,12 +46,12 @@ exports.createFood = async (req, res) => {
 
         const food_obj = await Food.findById(savedFood.id).populate('author')
 
-        const food_data = FilterFoodData(food_obj)
+        //const food_data = FilterFoodData(food_obj)
 
         let dataToSend = {
             req,
             key: 'new-food',
-            notify_content: `${food_data.author.username} has post new food recipe`,
+            notify_content: `${food_obj.author.username} has post new food recipe`,
             data: food_data,
             notify_type: 'FOOD',
             destination: ''
@@ -62,7 +59,7 @@ exports.createFood = async (req, res) => {
 
         await SendDataToFollower(dataToSend)
 
-        return res.status(201).json({ message: 'New food created', food: food_data })
+        return res.status(201).json({ message: 'New food created', food: food_obj })
 
     } catch (err) {
         console.log(err)
@@ -130,8 +127,9 @@ exports.rateFood = async (req, res) => {
         })
 
         const savedRate = await rate.save()
+        const rateData = savedRate.populate('author').execPopulate()
 
-        const food_obj = await Food.findById(food)
+        const food_obj = await FoodRate.findById(food)
 
         if (!food_obj) {
             return res.json(400).json({ error: 'Not found food' })
@@ -145,12 +143,12 @@ exports.rateFood = async (req, res) => {
         await SendDataToUsers({
             req,
             key: 'new-food-rate',
-            data: savedRate
+            data: rateData
         })
 
 
 
-        return res.status(201).json({ message: 'food saved successfully', food: food_obj })
+        return res.status(201).json({ message: 'food saved successfully', rate: rateData })
 
     } catch (err) {
         console.log(err)

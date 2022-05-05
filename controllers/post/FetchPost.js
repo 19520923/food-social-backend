@@ -1,8 +1,6 @@
 const Post = require("../../models/Post");
 const PostComment = require("../../models/PostComment");
 const PostReaction = require("../../models/PostReaction");
-const User = require("../../models/User");
-const FilterCommentData = require("../../utils/FilterCommentData");
 const FilterPostData = require("../../utils/FilterPostData");
 
 

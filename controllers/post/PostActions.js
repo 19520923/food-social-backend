@@ -1,12 +1,8 @@
-const Food = require('../../models/Food')
 const Post = require("../../models/Post")
 const PostComment = require("../../models/PostComment")
-const PostReaction = require("../../models/PostReaction")
-const FilterPostData = require("../../utils/FilterPostData")
 const SendDataToFollower = require("../../utils/socket/SendDataToFollower")
 const SendDataToUsers = require("../../utils/socket/SendDataToUsers")
 const CreateNotification = require('../../utils/CreateNotification')
-const { FilterCommentData } = require('../../utils/FilterCommentData')
 
 
 exports.createPost = async (req, res) => {
@@ -143,11 +139,12 @@ exports.createComment = async (req, res) => {
         })
 
         const saveComment = await comment.save()
+        const commentData = saveComment.populate('author').execPopulate()
 
         post_obj.num_comment += 1
         await post_obj.save()
 
-        await SendDataToUsers({ req, key: 'new-comment-post', data: FilterCommentData(saveComment) })
+        await SendDataToUsers({ req, key: 'new-comment-post', data: commentData})
 
 
         if (post_obj.author.id !== req.userId) {
@@ -168,7 +165,7 @@ exports.createComment = async (req, res) => {
             }
         }
 
-        return res.status(200).json({ message: 'Add comment succesfully', data: FilterCommentData(saveComment) })
+        return res.status(200).json({ message: 'Add comment succesfully', comment: commentData})
 
     } catch (error) {
         console.log(error);
