@@ -2,8 +2,8 @@ const Notification =  require('../models/Notification')
 
 module.exports = async ({receiver, content, destination = '', type = 'SYSTEM', author}) => {
     const notification = new Notification({
-        author: author._id,
-        receiver: receiver._id,
+        author: author,
+        receiver: receiver,
         notify_type: type,
         destination: destination,
         content: content
@@ -11,7 +11,7 @@ module.exports = async ({receiver, content, destination = '', type = 'SYSTEM', a
 
     const savedNotif = await notification.save()
 
-    const notifData = savedNotif.populate('author').execPopulate()
+    const notifData = await Notification.findById(savedNotif.id).populate('author')
 
     return notifData
 }

@@ -30,8 +30,8 @@ exports.followUser = async (req, res) => {
         await user_receiver.save()
 
         let notification = await CreateNotification({
-            author: user_send,
-            receiver: user_receiver,
+            author: user_send.id,
+            receiver: user_receiver.id,
             type: 'FOLLOW',
             destination: user_send.id,
             content: `${user_send.username} has been following you`

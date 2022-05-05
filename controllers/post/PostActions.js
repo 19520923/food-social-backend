@@ -151,7 +151,7 @@ exports.createComment = async (req, res) => {
 
             let notification = await CreateNotification({
                 author: req.userId,
-                receiver: post.author,
+                receiver: post.author.id,
                 type: 'COMMENT',
                 destination: '',
                 content: `${post_obj.author.username} has comment your post`

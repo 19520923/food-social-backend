@@ -8,9 +8,9 @@ module.exports = async ({req, res, key, notify_content, notify_type, data, desti
 
         if(notify_content){
             let notification = await CreateNotification({
-                author: follower,
+                author: follower.id,
                 content: notify_content,
-                receiver: user,
+                receiver: user.id,
                 type: notify_type,
                 destination: destination,
             })
