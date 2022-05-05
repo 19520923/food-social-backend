@@ -30,7 +30,7 @@ exports.createPost = async (req, res) => {
 
         const savePost = await post.save()
 
-        const post_data = savePost.populate('author').populate('foods').execPopulate()
+        const post_data = await Post.findById(savePost.id).populate('author').populate('foods')
 
         let notifData = {
             req,
@@ -80,7 +80,7 @@ exports.likeOrDislikePost = async (req, res) => {
 
                 let notification = await CreateNotification({
                     author: req.userId,
-                    receiver: post.author._id,
+                    receiver: post.author.id,
                     type: 'LIKE',
                     destination: '',
                     content: `${post.author.username} has liked your post`
@@ -105,7 +105,7 @@ exports.createComment = async (req, res) => {
     try {
         const { post, content, parent } = req.body
 
-        const post_obj = await Post.findById(post).populate('author')
+        const post_obj = await Post.findById(post).populate(author)
 
         if (!post_obj) {
             error.post = 'Post not found'
@@ -139,7 +139,7 @@ exports.createComment = async (req, res) => {
         })
 
         const saveComment = await comment.save()
-        const commentData = saveComment.populate('author').execPopulate()
+        const commentData = await PostComment.findById(saveComment.id).populate('author')
 
         post_obj.num_comment += 1
         await post_obj.save()

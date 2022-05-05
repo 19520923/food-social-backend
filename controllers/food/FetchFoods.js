@@ -12,18 +12,9 @@ exports.fetchFoodById = async (req, res) => {
 
         const rates = await FoodRate.find({ food: req.params.food_id }).populate('author').sort({ created_at: -1 })
 
-        const filterRates = rates.map((rate) => {
-            return {
-                id: rate.id,
-                author: FilterUserData(rate.author),
-                content: rate.content,
-                score: rate.score,
-            }
-        })
-
         return res.status(200).json({
             food: food,
-            rates: filterRates
+            rates: rates
         })
     } catch (error) {
         console.log(error);

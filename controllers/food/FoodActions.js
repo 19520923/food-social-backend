@@ -42,7 +42,7 @@ exports.createFood = async (req, res) => {
 
         const savedFood = await food.save()
 
-        const food_obj = savedFood.populate('author').execPopulate()
+        const food_obj = await Food.findById(savedFood.id).populate('author')
 
         //const food_data = FilterFoodData(food_obj)
 
@@ -117,6 +117,12 @@ exports.rateFood = async (req, res) => {
             return res.status(422).json({ error })
         }
 
+        const food_obj = await FoodRate.findById(food)
+
+        if (!food_obj) {
+            return res.json(400).json({ error: 'Not found food' })
+        }
+
         const rate = new FoodRate({
             author: req.userId,
             food: food,
@@ -125,13 +131,7 @@ exports.rateFood = async (req, res) => {
         })
 
         const savedRate = await rate.save()
-        const rateData = savedRate.populate('author').execPopulate()
-
-        const food_obj = await FoodRate.findById(food)
-
-        if (!food_obj) {
-            return res.json(400).json({ error: 'Not found food' })
-        }
+        const rateData = await FoodRate.findById(savedRate.id).populate('author')
 
         food_obj.avg_score = await AvgScore(food_obj)
         food_obj.num_rate += 1
@@ -141,12 +141,10 @@ exports.rateFood = async (req, res) => {
         await SendDataToUsers({
             req,
             key: 'new-food-rate',
-            data: rateData
+            data: {rate: rateData, food: food_obj}
         })
 
-
-
-        return res.status(201).json({ message: 'food saved successfully', rate: rateData })
+        return res.status(201).json({ message: 'food saved successfully', rate: rateData, food: food_obj })
 
     } catch (err) {
         console.log(err)
