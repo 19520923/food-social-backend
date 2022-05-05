@@ -1,7 +1,5 @@
 const Food = require('../../models/Food')
-const User = require('../../models/User')
 const FoodRate = require('../../models/FoodRate')
-const FilterFoodData = require('../../utils/FilterFoodData')
 const SendDataToFollower = require('../../utils/socket/SendDataToFollower')
 const AvgScore = require('../../utils/AvgScore')
 const SendDataToUsers = require('../../utils/socket/SendDataToUsers')
@@ -44,7 +42,7 @@ exports.createFood = async (req, res) => {
 
         const savedFood = await food.save()
 
-        const food_obj = await Food.findById(savedFood.id).populate('author')
+        const food_obj = savedFood.populate('author').execPopulate()
 
         //const food_data = FilterFoodData(food_obj)
 
@@ -52,7 +50,7 @@ exports.createFood = async (req, res) => {
             req,
             key: 'new-food',
             notify_content: `${food_obj.author.username} has post new food recipe`,
-            data: food_data,
+            data: food_obj,
             notify_type: 'FOOD',
             destination: ''
         }
