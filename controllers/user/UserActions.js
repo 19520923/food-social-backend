@@ -40,16 +40,18 @@ exports.followUser = async (req, res) => {
         if (user_receiver.socket_id) {
             req.io
                 .to(user_receiver.socket_id)
-                .emit('follow-request-status', { sender: FilterUserData(user_send) })
+                .emit('follow-request-status', { sender: user_send })
 
             req.io
                 .to(user_receiver.socket_id)
                 .emit('notification', { data: notification })
         }
 
+        const user_data = await User.findById(req.userId).populate('following').populate('follower')
+
         return res.status(200).json({
             message: 'follow successfully',
-            notification: notification
+            data: user_data
         })
 
     } catch (err) {
@@ -85,8 +87,11 @@ exports.unFollow = async (req, res) => {
         user_receiver.follower = user_receiver.follower.filter(f => f != req.userId)
         await user_receiver.save()
 
+        const user_data = await User.findById(req.userId).populate('following').populate('follower')
+
         return res.status(200).json({
             message: 'unfollow successfully',
+            data: user_data
         })
     } catch (error) {
         return res.status(500).json({ error: 'Something went wrong' })
