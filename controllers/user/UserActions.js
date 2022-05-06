@@ -58,6 +58,42 @@ exports.followUser = async (req, res) => {
     }
 }
 
+exports.unFollow = async (req, res) => {
+    try {
+
+        const user_receiver = await User.findById(req.params.user_id)
+        const user_send = await User.findById(req.userId)
+
+        if (!user_receiver) {
+            return res.status(404).json({
+                error: 'User not found'
+            })
+        }
+
+        if (req.userId == req.params.user_id) {
+            return res
+                .status(400)
+                .json({ error: 'You cannot unfollow yourself' })
+        }
+
+        if (!user_send.following.includes(req.params.user_id)) {
+            return res.status(400).json({ error: 'Already unfollowing' })
+        }
+
+        user_send.following = user_send.following.filter(f => f != req.params.user_id)
+        await user_send.save()
+        user_receiver.follower = user_receiver.follower.filter(f => f != req.userId)
+        await user_receiver.save()
+
+        return res.status(200).json({
+            message: 'unfollow successfully',
+        })
+    } catch (error) {
+        return res.status(500).json({ error: 'Something went wrong' })
+    }
+
+}
+
 
 exports.seenNotification = async (req, res) => {
     try {
