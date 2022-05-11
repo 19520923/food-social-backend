@@ -105,7 +105,7 @@ exports.createComment = async (req, res) => {
     try {
         const { post, content, parent } = req.body
 
-        const post_obj = await Post.findById(post).populate(author)
+        const post_obj = await Post.findById(post).populate('author')
 
         if (!post_obj) {
             error.post = 'Post not found'
