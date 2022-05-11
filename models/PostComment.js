@@ -23,11 +23,14 @@ const PostCommentSchema = mongoose.Schema({
     }
 })
 
-PostCommentSchema.virtual('childrent', {
+PostCommentSchema.virtual('children', {
     ref: 'PostComment',
     localField: '_id',
     foreignField: 'parent',
-    sort: { createdAt: -1 }
+    sort: { created_at: -1 }
 })
+
+PostCommentSchema.set('toObject', { virtuals: true });
+PostCommentSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('PostComment', PostCommentSchema)
