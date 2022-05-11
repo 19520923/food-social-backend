@@ -12,7 +12,7 @@ exports.fetchPostById = async (req, res) => {
             return res.status(400).json({ error: 'Not found' })
         }
 
-        const comments = await PostComment.find({post}).populate('author').populate('childrent')
+        const comments = await PostComment.find({ post }).populate('author').populate('childrent')
 
         const post_data = FilterPostData(post)
 
@@ -61,7 +61,7 @@ exports.fetchAllComment = async (req, res) => {
             .sort({ created_at: -1 })
             .limit(limit)
             .skip(page * limit)
-            .populate('children')
+            .populate({ path: 'children', populate: { path: 'author' } })
             .populate('author')
 
         //const filterComments = comments.map((comment) => FilterCommentData(comment))

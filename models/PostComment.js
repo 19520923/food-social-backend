@@ -27,7 +27,7 @@ PostCommentSchema.virtual('children', {
     ref: 'PostComment',
     localField: '_id',
     foreignField: 'parent',
-    sort: { created_at: -1 }
+    sort: { created_at: 1 }
 })
 
 PostCommentSchema.set('toObject', { virtuals: true });

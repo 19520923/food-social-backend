@@ -21,6 +21,6 @@ async function addSocketIdInDB(socket_id, user_id) {
   const user = await User.findById(user_id)
   if (socket_id) {
     user.socket_id = socket_id
+    await user.save()
   }
-  await user.save()
 }
