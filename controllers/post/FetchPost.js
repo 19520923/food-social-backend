@@ -61,7 +61,7 @@ exports.fetchAllComment = async (req, res) => {
             .sort({ created_at: -1 })
             .limit(limit)
             .skip(page * limit)
-            .populate('childrent')
+            .populate('children')
             .populate('author')
 
         //const filterComments = comments.map((comment) => FilterCommentData(comment))
