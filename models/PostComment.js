@@ -21,7 +21,9 @@ const PostCommentSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PostComment'
     }
-})
+},
+    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
+)
 
 PostCommentSchema.virtual('children', {
     ref: 'PostComment',
