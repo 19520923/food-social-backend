@@ -157,29 +157,54 @@ exports.updateAvatarPic = async (req, res) => {
 }
 
 
-// exports.updateProfile = async (req, res) => {
-//     try {
-//         const {first_name, last_name, username, about} = req.body
+exports.updateProfile = async (req, res) => {
+    try {
+        const { first_name, last_name, username, about, cover_url, avatar_url } = req.body
 
-//         let error = {}
+        let error = {}
 
-//         const user_username = await User.findOne({username})
-//         if (user_username) {
-//             error.username = 'Username has been used'
-//         }
+        const user_username = await User.findOne({ username })
+        if (user_username) {
+            error.username = 'Username has been used'
+        }
 
-//         if(Object.keys(error).length){
-//             return res.status(422).json({error})
-//         }
-//         const user = await User.findById(req.userId)
-//         user.cover_url = cover_url
-//         await user.save()
+        if (Object.keys(error).length) {
+            return res.status(422).json({ error })
+        }
+        const user = await User.findById(req.userId)
 
-//         return res.status(200).json({
-//             message: 'cover picture updated'
-//         })
-//     } catch (err){
-//         console.log(err)
-//         return res.status(500).json({error: 'Something went wrong'})
-//     }
-// }
+        if (first_name && first_name !== '') {
+            user.first_name = first_name
+        }
+
+        if (last_name && last_name !== '') {
+            user.last_name = last_name
+        }
+
+        if (username && username !== '') {
+            user.username = username
+        }
+
+        if (about && about !== '') {
+            user.about = about
+        }
+
+        if (cover_url && cover_url !== '') {
+            user.cover_url = cover_url
+        }
+
+        if (avatar_url && avatar_url !== '') {
+            user.avatar_url = avatar_url
+        }
+
+        await user.save()
+
+        return res.status(200).json({
+            message: 'Your profile has been updated'
+        })
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ error: 'Something went wrong' })
+    }
+}
