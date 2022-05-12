@@ -1,8 +1,6 @@
 const Food = require("../../models/Food");
 const FoodRate = require("../../models/FoodRate");
 const Ingredient = require("../../models/Ingredient");
-const FilterFoodData = require("../../utils/FilterFoodData");
-const FilterUserData = require("../../utils/FilterUserData");
 
 exports.fetchFoodById = async (req, res) => {
     try {
