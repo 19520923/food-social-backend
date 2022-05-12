@@ -164,6 +164,7 @@ exports.updateProfile = async (req, res) => {
         let error = {}
 
         const user_username = await User.findOne({ username })
+        
         if (user_username) {
             error.username = 'Username has been used'
         }
@@ -199,8 +200,11 @@ exports.updateProfile = async (req, res) => {
 
         await user.save()
 
+        const user_data = await User.findById(req.userId).populate('follower').populate('following')
+
         return res.status(200).json({
-            message: 'Your profile has been updated'
+            message: 'Your profile has been updated',
+            user: user_data
         })
 
     } catch (err) {
