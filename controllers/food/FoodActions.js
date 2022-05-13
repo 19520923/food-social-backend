@@ -117,7 +117,7 @@ exports.rateFood = async (req, res) => {
             return res.status(422).json({ error })
         }
 
-        const food_obj = await FoodRate.findById(food)
+        const food_obj = await Food.findById(food)
 
         if (!food_obj) {
             return res.status(400).json({ error: 'Not found food' })
