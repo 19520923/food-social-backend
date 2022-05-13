@@ -12,7 +12,7 @@ router.get('/trending', authRequired, fetchTrendingPost)
 router.get('/posts/:post_id', authRequired, fetchPostById)
 router.get('/comments/:post_id', authRequired, fetchAllComment)
 router.get('/reactions/:post_id', authRequired, fetchAllReaction)
-router.get('/user-posts', authRequired, fetchUserPost)
+router.get('/user-posts/:user_id', authRequired, fetchUserPost)
 router.get('/close-location', authRequired, fetchCloseLocation)
 
 module.exports  = router

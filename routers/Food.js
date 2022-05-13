@@ -15,7 +15,7 @@ router.get('/search/', authRequired, fetchAllFood)
 
 router.get('/ingredients/:search', authRequired, recomandationIngrName)
 router.get('/pairing/ingredients', authRequired, recomendataionPairing)
-router.get('/user-foods',authRequired, fetchUserFood)
+router.get('/user-foods/:user_id',authRequired, fetchUserFood)
 router.get('/trending', authRequired, fetchTrendingFood)
 router.get('/rate/:food_id', authRequired, fetchAllRate)
 

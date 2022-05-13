@@ -145,15 +145,15 @@ exports.fetchUserPost = async (req, res) => {
     let limit = 10
 
     try {
-        const posts = await Post.find({ author: req.userId })
-            .sort({ created_at: 1 })
+        const posts = await Post.find({ author: req.params.user_id })
+            .sort({ created_at: -1 })
             .limit(limit)
             .skip(page * limit)
             .populate('author')
             .populate('foods')
 
         //const filterPosts = posts.map((comment) => FilterPostData(comment))
-        const totalCount = await Post.countDocuments({ author: req.userId })
+        const totalCount = await Post.countDocuments({ author: req.params.user_id })
 
         const paginationData = {
             currentPage: page,
