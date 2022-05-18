@@ -82,27 +82,23 @@ exports.fetchAllComment = async (req, res) => {
 }
 
 exports.fetchAllReaction = async (req, res) => {
-    let page = parseInt(req.query.page || 0)
-    let limit = 10
 
     try {
-        const reacts = await PostReaction.find({ post: req.params.post_id })
-            .sort({ created_at: -1 })
-            .limit(limit)
-            .skip(page * limit)
-            .populate('author')
+        const reacts = await Post.findById(req.params.post_id)
+            .populate('reactions')
+            .select('reactions')
 
         //const filterComments = comments.map((comment) => FilterCommentData(comment))
-        const totalCount = await PostReaction.countDocuments({ post: req.params.post_id })
+        // const totalCount = await PostReaction.countDocuments({ post: req.params.post_id })
 
-        const paginationData = {
-            currentPage: page,
-            totalPage: Math.ceil(totalCount / limit),
-            totalReactions: totalCount,
-        }
+        // const paginationData = {
+        //     currentPage: page,
+        //     totalPage: Math.ceil(totalCount / limit),
+        //     totalReactions: totalCount,
+        // }
         res
             .status(200)
-            .json({ reacts: reacts, pagination: paginationData })
+            .json({ reacts: reacts})
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
