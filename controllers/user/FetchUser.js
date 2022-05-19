@@ -57,7 +57,7 @@ exports.me = async (req, res) => {
             user: user,
             notifications: notifications
         })
-        
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({

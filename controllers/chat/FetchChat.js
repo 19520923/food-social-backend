@@ -18,14 +18,6 @@ exports.fetchAllChat = async (req, res) => {
         .populate('user_1')
         .populate('user_2')
 
-        const filterChat = chats.map((chat) => ({
-            id: chat.id,
-            user_1: FilterUserData(chat.user_1),
-            user_2: FilterUserData(chat.user_2),
-            is_user_1_seen: chat.is_user_1_seen,
-            is_user_2_seen: chat.is_user_2_seen,
-            created_at: chat.created_at
-        }))
         const totalCount = await Chat.countDocuments({ $or: [
             {user_1: req.userId},
             {user_2: req.userId}
@@ -38,12 +30,12 @@ exports.fetchAllChat = async (req, res) => {
         }
         res
         .status(200)
-        .json({ chats: filterChat, pagination: paginationData })
+        .json({ chats: chats, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({error:"Something went wrong"})
     }
-
+    
 }
 
 exports.fetchAllMessage = async (req, res) => {
@@ -57,14 +49,6 @@ exports.fetchAllMessage = async (req, res) => {
         .skip(page * limit)
         .populate('author')
 
-        const filterMessage = messages.map((message) => ({
-            id: message.id,
-            content: message.content,
-            type: message.type,
-            author: FilterUserData(message.author),
-            chat: message.chat,
-            created_at: message.created_at
-        }))
         const totalCount = await Message.countDocuments({ chat: req.params.chat_id })
 
         const paginationData = {
@@ -74,7 +58,7 @@ exports.fetchAllMessage = async (req, res) => {
         }
         res
         .status(200)
-        .json({ messages: filterMessage, pagination: paginationData })
+        .json({ messages: messages, pagination: paginationData })
     } catch (err) {
         console.log(err)
         return res.status(500).json({error:"Something went wrong"})
