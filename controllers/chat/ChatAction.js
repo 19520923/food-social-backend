@@ -76,7 +76,7 @@ exports.sendMessage = async (req, res) => {
 
         if (chatRoom.user_1.socket_id) {
             req.io
-                .to(chatRoom.user_1.socketId)
+                .to(chatRoom.user_1.socket_id)
                 .emit('new-message', { data: messageData })
         }
 

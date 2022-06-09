@@ -1,7 +1,5 @@
 const User = require('../../models/User')
-const FilterUserData = require('../../utils/FilterUserData')
 const Notification = require('../../models/Notification')
-const FilterNotification = require('../../utils/FilterNotification')
 
 exports.fetchUserById = async (req, res) => {
     try {
