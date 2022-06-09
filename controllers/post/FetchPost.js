@@ -14,10 +14,10 @@ exports.fetchPostById = async (req, res) => {
 
         const comments = await PostComment.find({ post }).populate('author').populate('childrent')
 
-        const post_data = FilterPostData(post)
+        // const post_data = FilterPostData(post)
 
         return res.status(200).json({
-            post: post_data,
+            post: post,
             comments: comments,
         })
     } catch (error) {

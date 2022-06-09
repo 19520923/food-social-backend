@@ -4,7 +4,6 @@ const SendDataToFollower = require("../../utils/socket/SendDataToFollower")
 const SendDataToUsers = require("../../utils/socket/SendDataToUsers")
 const CreateNotification = require('../../utils/CreateNotification')
 
-
 exports.createPost = async (req, res) => {
 
     try {
@@ -65,7 +64,7 @@ exports.likeOrDislikePost = async (req, res) => {
         const index = post.reactions.indexOf(req.userId)
         if (index !== -1) {
             post.reactions.splice(index, 1)
-            post.num_heart -=1
+            post.num_heart -= 1
             const savedPost = await post.save()
             //const postData = FilterPostData(savedPost)
             await SendDataToUsers({ req, key: 'dislike-post', data: savedPost })
@@ -144,7 +143,7 @@ exports.createComment = async (req, res) => {
         post_obj.num_comment += 1
         await post_obj.save()
 
-        await SendDataToUsers({ req, key: 'new-comment-post', data: commentData})
+        await SendDataToUsers({ req, key: 'new-comment-post', data: commentData })
 
 
         if (post_obj.author.id !== req.userId) {
@@ -165,7 +164,7 @@ exports.createComment = async (req, res) => {
             }
         }
 
-        return res.status(200).json({ message: 'Add comment succesfully', comment: commentData})
+        return res.status(200).json({ message: 'Add comment succesfully', comment: commentData })
 
     } catch (error) {
         console.log(error);
