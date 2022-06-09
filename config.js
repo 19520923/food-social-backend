@@ -8,6 +8,6 @@ module.exports = {
   BASE_URL: process.env.BASE_URL || 'https://foodtalk-backend.herokuapp.com',
   // BASE_URL: process.env.BASE_URL || 'https://food-social-backend.vercel.app',
   HOST: 'smtp.gmail.com',
-  USER: '19520923@gm.uit.edu.vn',
+  USER: 'foodtalksocial@gmail.com',
   PASS: 'tan12022001',
 }
