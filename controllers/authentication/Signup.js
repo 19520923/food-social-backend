@@ -7,7 +7,7 @@ const {JWT_SECRET, JWT_EXP, BASE_URL} = require('../../config')
 
 const RegisterUser = async (req, res) => {
     try {
-        const {first_name, last_name, email, password, username, avatar_url = ''} = req.body
+        const {first_name, last_name, email, password, username, avatar_url} = req.body
         let error = {}
 
         if(!first_name || first_name.trim().length === 0){
