@@ -53,12 +53,12 @@ const UserSchema = new Schema({
 
     avatar_url: {
         type: String,
-        default :''
+        default :'https://i.pinimg.com/564x/f7/c9/21/f7c9219902a7472f5c9bc244548311ce.jpg'
     },
 
     cover_url: {
         type: String,
-        default: ''
+        default: 'https://i.pinimg.com/originals/28/35/be/2835be38b5274a4b20155999a7613542.jpg'
     },
 
     about: {
