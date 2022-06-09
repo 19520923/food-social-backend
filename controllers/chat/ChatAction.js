@@ -67,12 +67,7 @@ exports.sendMessage = async (req, res) => {
 
         await chatRoom.save()
 
-        const messageData = await Message.findById(saveMessage.id).populate('author').
-
-        res.status(201).json({
-            message: 'Sent successfully',
-            content: messageData
-        })
+        const messageData = await Message.findById(saveMessage.id).populate('author')
 
         if (chatRoom.user_1.socket_id) {
             req.io
@@ -85,6 +80,11 @@ exports.sendMessage = async (req, res) => {
                 .to(chatRoom.user_2.socket_id)
                 .emit('new-message', { data: messageData })
         }
+
+        return res.status(201).json({
+            message: 'Sent successfully',
+            content: messageData
+        })
 
     } catch (error) {
         console.log(error);
