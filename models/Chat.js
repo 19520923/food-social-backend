@@ -19,6 +19,11 @@ const ChatSchema = mongoose.Schema({
     is_user_2_seen: {
         type: Boolean,
         default: false
+    },
+
+    lastMessage: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message'
     }
 },
     { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }

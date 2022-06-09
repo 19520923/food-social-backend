@@ -27,9 +27,11 @@ exports.createChatRoom = async (req, res) => {
 
         const saveRoom = await room.save()
 
+        const roomData = await Chat.findById(saveRoom.id).populate('user_1').populate('user_2')
+
         return res.status(201).json({
             message: 'created',
-            room: saveRoom
+            room: roomData
         })
 
     } catch (error) {
@@ -61,21 +63,27 @@ exports.sendMessage = async (req, res) => {
 
         const saveMessage = await message.save()
 
+        chatRoom.lastMessage = saveMessage
+
+        await chatRoom.save()
+
+        const messageData = await Message.findById(saveMessage.id).populate('author').
+
         res.status(201).json({
             message: 'Sent successfully',
-            content: saveMessage
+            content: messageData
         })
 
         if (chatRoom.user_1.socket_id) {
             req.io
                 .to(chatRoom.user_1.socketId)
-                .emit('new-message', { data: saveMessage })
+                .emit('new-message', { data: messageData })
         }
 
         if (chatRoom.user_2.socket_id) {
             req.io
                 .to(chatRoom.user_2.socket_id)
-                .emit('new-message', { data: saveMessage })
+                .emit('new-message', { data: messageData })
         }
 
     } catch (error) {
