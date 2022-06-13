@@ -49,7 +49,7 @@ exports.me = async (req, res) => {
             })
         }
 
-        const notifications = await Notification.find({ receiver: req.userId }).sort({ create_at: -1 }).populate('author').populate({path: 'post_data', populate: {path: 'author', path: 'foods'}}).populate({path: 'food_data', populate: {path: 'author'}})
+        const notifications = await Notification.find({ receiver: req.userId }).sort({ create_at: -1 }).populate('author').populate({ path: 'post_data', populate: [{ path: 'author' }, { path: 'foods' }] }).populate({ path: 'food_data', populate: { path: 'author' } })
 
         return res.status(200).json({
             user: user,
