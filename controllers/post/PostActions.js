@@ -37,6 +37,7 @@ exports.createPost = async (req, res) => {
             notify_content: `${post_data.author.username} has new post`,
             key: 'new-post',
             data: post_data,
+            post_data: post_data,
             destination: ''
         }
 
@@ -83,6 +84,7 @@ exports.likeOrDislikePost = async (req, res) => {
                     type: 'POST',
                     destination: '',
                     data: postData,
+                    post_data: postData,
                     content: `${post.author.username} has liked your post`
                 })
 
@@ -157,6 +159,7 @@ exports.createComment = async (req, res) => {
                 type: 'POST',
                 destination: '',
                 data: post_data,
+                post_data: post_data,
                 content: `${post_obj.author.username} has comment your post`
             })
 

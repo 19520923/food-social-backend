@@ -30,6 +30,16 @@ const NotificationSchema = mongoose.Schema({
     content: {
         type: String,
         default: ''
+    },
+    
+    post_data: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
+    },
+
+    food_data: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Food'
     }
 },
 
