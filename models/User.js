@@ -48,7 +48,9 @@ const UserSchema = new Schema({
 
     is_verified: {
         type: Boolean,
-        default: false
+        default: true
+
+        //set false for default
     },
 
     avatar_url: {

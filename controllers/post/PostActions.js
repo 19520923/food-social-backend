@@ -66,22 +66,23 @@ exports.likeOrDislikePost = async (req, res) => {
             post.reactions.splice(index, 1)
             post.num_heart -= 1
             const savedPost = await post.save()
-            //const postData = FilterPostData(savedPost)
-            await SendDataToUsers({ req, key: 'dislike-post', data: savedPost })
-            return res.status(200).json({ message: 'Remove post reaction succesfully', post: savedPost })
+            const postData = await Post.findById(savedPost.id).populate('author').populate('foods')
+            await SendDataToUsers({ req, key: 'dislike-post', data: postData })
+            return res.status(200).json({ message: 'Remove post reaction succesfully', post: postData })
         } else {
             post.reactions.push(req.userId)
             post.num_heart += 1
             const savedPost = await post.save()
-            //const postData = FilterPostData(savedPost)
-            await SendDataToUsers({ req, key: 'like-post', data: savedPost })
+            const postData = await Post.findById(savedPost.id).populate('author').populate('foods')
+            await SendDataToUsers({ req, key: 'like-post', data: postData })
             if (post.author.id !== req.userId) {
 
                 let notification = await CreateNotification({
                     author: req.userId,
                     receiver: post.author.id,
-                    type: 'LIKE',
+                    type: 'POST',
                     destination: '',
+                    data: postData,
                     content: `${post.author.username} has liked your post`
                 })
 
@@ -141,7 +142,9 @@ exports.createComment = async (req, res) => {
         const commentData = await PostComment.findById(saveComment.id).populate('author')
 
         post_obj.num_comment += 1
-        await post_obj.save()
+        const savedPost = await post_obj.save()
+
+        const post_data = await Post.findById(savedPost.id).populate('author').populate('foods')
 
         await SendDataToUsers({ req, key: 'new-comment-post', data: commentData })
 
@@ -151,8 +154,9 @@ exports.createComment = async (req, res) => {
             let notification = await CreateNotification({
                 author: req.userId,
                 receiver: post_obj.author.id,
-                type: 'COMMENT',
+                type: 'POST',
                 destination: '',
+                data: post_data,
                 content: `${post_obj.author.username} has comment your post`
             })
 
