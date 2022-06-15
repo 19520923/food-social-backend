@@ -3,6 +3,8 @@ const FoodRate = require('../../models/FoodRate')
 const SendDataToFollower = require('../../utils/socket/SendDataToFollower')
 const AvgScore = require('../../utils/AvgScore')
 const SendDataToUsers = require('../../utils/socket/SendDataToUsers')
+const User = require('../../models/User')
+const CreateNotification = require('../../utils/CreateNotification')
 
 exports.createFood = async (req, res) => {
     try {
@@ -51,7 +53,8 @@ exports.createFood = async (req, res) => {
             notify_content: `${food_obj.author.username} has post new food recipe`,
             data: food_obj,
             notify_type: 'FOOD',
-            destination: ''
+            destination: '',
+            food_data: food_obj
         }
 
         await SendDataToFollower(dataToSend)
@@ -117,6 +120,7 @@ exports.rateFood = async (req, res) => {
         }
 
         const food_obj = await Food.findById(food)
+        const user = await User.findById(req.userId)
 
         if (!food_obj) {
             return res.status(400).json({ error: 'Not found food' })
@@ -128,6 +132,26 @@ exports.rateFood = async (req, res) => {
             content,
             score
         })
+
+        if (food_obj.author.id !== req.userId) {
+
+            let notification = await CreateNotification({
+                author: req.userId,
+                receiver: food_obj.author.id,
+                type: 'FOOD',
+                destination: '',
+                food_data: food_obj,
+                content: `${user.username} has rate on your recipe`
+            })
+
+            if (food_obj.author.socket_id) {
+
+                req.io
+                    .to(food_obj.author.socket_id)
+                    .emit('notification', { data: notification })
+            }
+        }
+        
 
         const savedRate = await rate.save()
         const rateData = await FoodRate.findById(savedRate.id).populate('author')
