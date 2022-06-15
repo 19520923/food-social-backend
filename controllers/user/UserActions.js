@@ -149,7 +149,7 @@ exports.updateAvatarPic = async (req, res) => {
         await user.save()
 
         return res.status(200).json({
-            message: 'avatar picture updated'
+            message: 'avatar picture updated',
         })
     } catch (err) {
         console.log(err)
@@ -160,7 +160,7 @@ exports.updateAvatarPic = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const { first_name, last_name, username, about, cover_url, avatar_url } = req.body
+        const { first_name, last_name, username, about } = req.body
 
         let error = {}
 
@@ -189,14 +189,6 @@ exports.updateProfile = async (req, res) => {
 
         if (about && about !== '') {
             user.about = about
-        }
-
-        if (cover_url && cover_url !== '') {
-            user.cover_url = cover_url
-        }
-
-        if (avatar_url && avatar_url !== '') {
-            user.avatar_url = avatar_url
         }
 
         await user.save()
