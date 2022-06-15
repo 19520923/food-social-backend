@@ -1,3 +1,4 @@
+const Notification = require("../../models/Notification")
 const User = require("../../models/User")
 const CreateNotification = require("../../utils/CreateNotification")
 
@@ -210,5 +211,22 @@ exports.updateProfile = async (req, res) => {
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: 'Something went wrong' })
+    }
+}
+
+exports.seenNotification = async (req, res) => {
+    try {
+        const noti = await Notification.findById(req.params.noti_id)
+
+        noti.is_seen = true
+
+        await noti.save()
+
+
+        return res.status(200).json({message: 'Notification seen'})
+
+    } catch (error) {
+        console.log(err);
+        return res.status(500).json({error: 'Something went wrong'})
     }
 }
