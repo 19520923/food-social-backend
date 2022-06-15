@@ -44,7 +44,6 @@ exports.createFood = async (req, res) => {
 
         const food_obj = await Food.findById(savedFood.id).populate('author')
 
-        //const food_data = FilterFoodData(food_obj)
 
         let dataToSend = {
             req,
@@ -67,7 +66,7 @@ exports.createFood = async (req, res) => {
 
 exports.deleteFood = async (req, res) => {
     try {
-        food = await Food.findById(req.params.food_id).populate('author')
+        const food = await Food.findById(req.params.food_id).populate('author')
 
         if (!food) {
             return res.status(400).json({ error: 'Not found food' })

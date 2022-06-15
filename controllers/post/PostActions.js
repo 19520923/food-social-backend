@@ -3,6 +3,7 @@ const PostComment = require("../../models/PostComment")
 const SendDataToFollower = require("../../utils/socket/SendDataToFollower")
 const SendDataToUsers = require("../../utils/socket/SendDataToUsers")
 const CreateNotification = require('../../utils/CreateNotification')
+const User = require("../../models/User")
 
 exports.createPost = async (req, res) => {
 
@@ -57,6 +58,7 @@ exports.createPost = async (req, res) => {
 exports.likeOrDislikePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.post_id).populate('author').populate('foods')
+        const user = await User.findById(req.userId)
 
         if (!post) {
             return res.status(400).json({ error: 'Post not found' })
@@ -85,7 +87,7 @@ exports.likeOrDislikePost = async (req, res) => {
                     destination: '',
                     data: postData,
                     post_data: postData,
-                    content: `${post.author.username} has liked your post`
+                    content: `${user.username} has liked your post`
                 })
 
                 if (post.author.socket_id) {
@@ -106,6 +108,7 @@ exports.likeOrDislikePost = async (req, res) => {
 exports.createComment = async (req, res) => {
     try {
         const { post, content, parent } = req.body
+        const user = await User.findById(req.userId)
 
         const post_obj = await Post.findById(post).populate('author')
 
@@ -160,7 +163,7 @@ exports.createComment = async (req, res) => {
                 destination: '',
                 data: post_data,
                 post_data: post_data,
-                content: `${post_obj.author.username} has comment your post`
+                content: `${user.username} has comment on your post`
             })
 
             if (post_obj.author.socket_id) {
