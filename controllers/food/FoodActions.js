@@ -119,7 +119,7 @@ exports.rateFood = async (req, res) => {
             return res.status(422).json({ error })
         }
 
-        const food_obj = await Food.findById(food)
+        const food_obj = await Food.findById(food).populate('author')
         const user = await User.findById(req.userId)
 
         if (!food_obj) {
