@@ -140,7 +140,6 @@ exports.rateFood = async (req, res) => {
                 receiver: food_obj.author.id,
                 type: 'FOOD',
                 destination: '',
-                food_data: food_obj,
                 content: `${user.username} has rate on your recipe`
             })
 
