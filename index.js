@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 app.use(cors());
-app.use((req, next) => {
+app.use((req, res, next) => {
   io.req = req;
   req.io = io;
   next();
