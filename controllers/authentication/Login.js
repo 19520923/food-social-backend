@@ -69,8 +69,8 @@ module.exports = async (req, res) => {
         token,
       },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };

@@ -63,7 +63,7 @@ exports.createFood = async (req, res) => {
       .json({ message: "New food created", food: food_obj });
   } catch (err) {
     console.log(err);
-    return res.status(500), json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -162,13 +162,11 @@ exports.rateFood = async (req, res) => {
       data: { rate: rateData, food: food_obj },
     });
 
-    return res
-      .status(201)
-      .json({
-        message: "food saved successfully",
-        rate: rateData,
-        food: food_obj,
-      });
+    return res.status(201).json({
+      message: "food saved successfully",
+      rate: rateData,
+      food: food_obj,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
