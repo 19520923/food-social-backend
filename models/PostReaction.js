@@ -1,20 +1,19 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const PostReactionSchema = mongoose.Schema({
+const PostReactionSchema = mongoose.Schema(
+  {
     post: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Post'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
     },
 
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
+  },
 
-},
+  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+);
 
-    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
-)
-
-
-module.exports = mongoose.model('PostReaction', PostReactionSchema)
+module.exports = mongoose.model("PostReaction", PostReactionSchema);

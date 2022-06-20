@@ -1,45 +1,46 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const FoodSchema = mongoose.Schema({
+const FoodSchema = mongoose.Schema(
+  {
     name: {
-        type: String,
-        trim: true,
-        require: true
+      type: String,
+      trim: true,
+      require: true,
     },
 
     ingredients: {
-        type: Array,
-        default: []
+      type: Array,
+      default: [],
     },
 
     recipe: {
-        type: Array,
-        default: [],
+      type: Array,
+      default: [],
     },
 
     avg_score: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
 
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
 
     photo: {
-        type: String,
-        default: ''
+      type: String,
+      default: "",
     },
 
     num_rate: {
-        type: Number,
-        default: 0
-    }
-},
-    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
-)
+      type: Number,
+      default: 0,
+    },
+  },
+  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+);
 
-FoodSchema.index({name: 'text'})
+FoodSchema.index({ name: "text" });
 
-module.exports = mongoose.model('Food', FoodSchema)
+module.exports = mongoose.model("Food", FoodSchema);

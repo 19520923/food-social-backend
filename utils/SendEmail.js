@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const {HOST, USER, PASS} = require("../config");
+const { HOST, USER, PASS } = require("../config");
 
 const sendEmail = async (email, subject, text) => {
   try {
@@ -13,8 +13,8 @@ const sendEmail = async (email, subject, text) => {
       },
 
       tls: {
-        ciphers:'SSLv3'
-      }
+        ciphers: "SSLv3",
+      },
     });
 
     await transporter.sendMail({

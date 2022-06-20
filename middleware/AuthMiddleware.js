@@ -1,29 +1,31 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const authHeader = req.headers['authorization']
+  const authHeader = req.headers["authorization"];
 
   if (authHeader) {
-    const token = authHeader.split('Bearer ')[1]
+    const token = authHeader.split("Bearer ")[1];
     if (token) {
-      let userId
+      let userId;
       try {
-        let decodedToken = jwt.decode(token)
-        userId = decodedToken.userId
+        let decodedToken = jwt.decode(token);
+        userId = decodedToken.userId;
       } catch (err) {
-        return res.status(400).json({ error: 'token are expired or incorrect' })
+        return res
+          .status(400)
+          .json({ error: "token are expired or incorrect" });
       }
 
       if (userId) {
-        req.userId = userId
-        next()
+        req.userId = userId;
+        next();
       } else {
-        return res.status(400).json({ error: 'Not Loggedin' })
+        return res.status(400).json({ error: "Not Loggedin" });
       }
     } else {
-      return res.status(400).json({ error: 'Not Loggedin' })
+      return res.status(400).json({ error: "Not Loggedin" });
     }
   } else {
-    return res.status(400).json({ error: 'Not Loggedin' })
+    return res.status(400).json({ error: "Not Loggedin" });
   }
-}
+};
