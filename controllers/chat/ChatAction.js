@@ -1,5 +1,4 @@
 const Chat = require("../../models/Chat");
-const FilterUserData = require("../../utils/FilterUserData");
 const Message = require("../../models/Message");
 
 exports.createChatRoom = async (req, res) => {

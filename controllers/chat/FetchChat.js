@@ -1,6 +1,5 @@
 const Chat = require("../../models/Chat");
 const Message = require("../../models/Message");
-const FilterUserData = require("../../utils/FilterUserData");
 
 exports.fetchAllChat = async (req, res) => {
   let page = parseInt(req.query.page || 0);
